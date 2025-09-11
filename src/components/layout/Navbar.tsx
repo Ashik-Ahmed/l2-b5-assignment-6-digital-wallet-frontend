@@ -12,7 +12,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { ModeToggle } from "./ModeToggler"
-import { Link } from "react-router"
+import { Link, useLocation } from "react-router"
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -21,6 +21,9 @@ const navigationLinks = [
 ]
 
 export default function Navbar() {
+
+  const activeLink = useLocation().pathname;
+
   return (
     <header className="border-b px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4">
@@ -67,7 +70,8 @@ export default function Navbar() {
                   {navigationLinks.map((link, index) => (
                     <NavigationMenuItem key={index} className="w-full">
                       <NavigationMenuLink
-                        className="py-1.5"
+                        asChild
+                        className={"py-1.5" + `${activeLink === link.href ? 'text-primary font-semibold bg-primary/10' : 'text-muted-foreground hover:text-foreground'}`}
                       >
                         <Link to={link.href}>{link.label}</Link>
                       </NavigationMenuLink>
@@ -88,7 +92,8 @@ export default function Navbar() {
                 {navigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink
-                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                      asChild
+                      className={`px-3 py-2 ${activeLink === link.href ? 'text-primary font-semibold bg-primary/10' : 'text-muted-foreground hover:text-foreground'} rounded-md`}
                     >
                       <Link to={link.href}>{link.label}</Link>
                     </NavigationMenuLink>
