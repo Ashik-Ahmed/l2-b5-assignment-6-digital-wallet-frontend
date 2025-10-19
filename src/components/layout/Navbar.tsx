@@ -18,6 +18,9 @@ import { Link, useLocation } from "react-router"
 const navigationLinks = [
   { href: "/", label: "Home", active: true },
   { href: "/about", label: "About" },
+  { href: "/features", label: "Features" },
+  { href: "/contact", label: "Contact" },
+  { href: "/faq", label: "FAQ" },
 ]
 
 export default function Navbar() {
