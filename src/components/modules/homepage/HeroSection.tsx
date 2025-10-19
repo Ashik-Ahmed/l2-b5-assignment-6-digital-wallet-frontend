@@ -23,9 +23,9 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({
-    heading = "Epic Blocks",
-    subheading = " built with shadcn/ui & Tailwind",
-    description = "Finely crafted components built with React, Tailwind and Shadcn UI. Developers can copy and paste these blocks directly into their project.",
+    heading = "Digital Wallet",
+    subheading = " for Modern Living",
+    description = "Manage your money effortlessly with our digital wallet. Secure, intuitive, and designed for you. Take control of your finances today.",
     buttons = {
         primary: {
             text: "Get Started",
@@ -46,7 +46,7 @@ const HeroSection = ({
             <div className="container mx-auto flex flex-col items-center gap-10 lg:my-0 lg:flex-row">
                 <div className="flex flex-col gap-7 lg:w-2/3">
                     <h2 className="text-foreground text-5xl font-semibold md:text-5xl lg:text-8xl">
-                        <span>{heading}</span>
+                        <span className="text-foreground">{heading}</span>
                         <span className="text-muted-foreground">{subheading}</span>
                     </h2>
                     <p className="text-muted-foreground text-base md:text-lg lg:text-xl">

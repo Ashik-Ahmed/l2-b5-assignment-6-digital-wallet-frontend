@@ -1,6 +1,7 @@
 import App from "@/App";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
+import Dashboard from "@/pages/UserDashboard";
 import FAQ from "@/pages/FAQ";
 import Features from "@/pages/Features";
 import Homepage from "@/pages/Homepage";
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 Component: Homepage,
+            },
+            {
+                Component: Dashboard,
+                path: "/dashboard",
             },
             {
                 Component: About,

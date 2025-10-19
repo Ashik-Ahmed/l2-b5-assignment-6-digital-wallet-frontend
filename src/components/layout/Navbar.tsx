@@ -17,6 +17,7 @@ import { Link, useLocation } from "react-router"
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Home", active: true },
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/about", label: "About" },
   { href: "/features", label: "Features" },
   { href: "/contact", label: "Contact" },
@@ -28,7 +29,7 @@ export default function Navbar() {
   const activeLink = useLocation().pathname;
 
   return (
-    <header className="border-b px-4 md:px-6">
+    <header className="border-b px-4 md:px-6 sticky top-0 z-40 bg-background/95 backdrop-blur-sm">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
