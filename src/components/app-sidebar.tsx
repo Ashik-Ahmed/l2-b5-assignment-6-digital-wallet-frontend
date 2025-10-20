@@ -21,7 +21,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <div className="px-4 py-2">
+        <div className="px-4 py-2 border-b">
           <Logo />
         </div>
       </SidebarHeader>
