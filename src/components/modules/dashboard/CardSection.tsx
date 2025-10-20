@@ -5,10 +5,10 @@ import { TrendingDown, TrendingUp } from "lucide-react"
 const CardSection = () => {
     return (
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-4">
                 <Card className="@container/card">
                     <CardHeader>
-                        <CardDescription>Total Revenue</CardDescription>
+                        <CardDescription>Current Balance</CardDescription>
                         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             $1,250.00
                         </CardTitle>
@@ -30,7 +30,7 @@ const CardSection = () => {
                 </Card>
                 <Card className="@container/card">
                     <CardHeader>
-                        <CardDescription>New Customers</CardDescription>
+                        <CardDescription></CardDescription>
                         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             1,234
                         </CardTitle>
