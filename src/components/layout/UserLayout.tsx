@@ -2,13 +2,26 @@ import type { ReactNode } from "react"
 import { Outlet, useNavigate } from "react-router"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../app-sidebar"
-import { CircleUserRound, Moon, Sun, User } from "lucide-react"
+import { CircleUserRound, LogOut, Moon, Settings, Sun, User } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
+import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api"
+import { useAppDispatch } from "@/redux/hook"
 
 
 const UserLayout = ({ children }: { children: ReactNode }) => {
+
+    const { data } = useUserInfoQuery();
     const navigate = useNavigate();
+    const [logout] = useLogoutMutation();
+    const dispatch = useAppDispatch();
+
+    const handleLogout = async () => {
+        await logout(undefined);
+        dispatch(authApi.util.resetApiState());
+        navigate("/login");
+    }
+
     const sidebarList = {
         navMain: [
             {
@@ -44,13 +57,18 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm">
-                                <CircleUserRound />
+                                <CircleUserRound /> {data?.data?.name || "User-Test"}
                                 <span className="sr-only">User Account</span>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => navigate("/user/profile")}>
-                                Profile
+                                <Settings className="mr-2 h-4 w-4" />
+                                Profile Settings
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleLogout}>
+                                <LogOut className="mr-2 h-4 w-4" />
+                                Logout
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

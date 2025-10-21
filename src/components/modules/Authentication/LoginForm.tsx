@@ -28,7 +28,11 @@ export function LoginForm({
             console.log("login result:", res);
             if (res.success) {
                 toast.success("Login successful");
-                navigate("/");
+                navigate(`/${res.data.user.role}/dashboard`);
+
+                // if (res.data.) {
+                //     navigate("/");
+                // }
             }
         } catch (err) {
             console.log(err);
