@@ -6,13 +6,15 @@ import { Mail, Phone, MapPin, Globe } from "lucide-react"
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api"
 import userIcon from "@/assets/images/user.png"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
+import { useForm, type FieldValues, type SubmitHandler, type UseFormReturn } from "react-hook-form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
 const Profile: React.FC = () => {
     const { data } = useUserInfoQuery()
+
+    const form = useForm();
 
     // fallback / dummy data when API not ready
     const user = {
@@ -30,10 +32,21 @@ const Profile: React.FC = () => {
         },
     }
 
-    const handleUpdate = () => {
-        // open update modal or navigate to edit page
-        console.log("Update profile clicked")
-    }
+    const updateProfileHandler: SubmitHandler<FieldValues> = async (data) => {
+        try {
+
+            // normalize strings and remove falsy values (undefined, "", null, 0, false)
+            const formValues = Object.fromEntries(
+                Object.entries(data)
+                    .map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])
+                    .filter(([_, v]) => Boolean(v))
+            );
+
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     const handleChangePassword = () => {
         // open change-password modal or navigate
@@ -70,7 +83,7 @@ const Profile: React.FC = () => {
                         <div className="flex flex-col items-end gap-3">
                             <div className="flex gap-3">
                                 {/* <Button onClick={handleUpdate}>Update Profile</Button> */}
-                                <UpdateProfileModal />
+                                <UpdateProfileModal user={user} updateProfileHandler={updateProfileHandler} form={form} />
                                 <Button variant="outline" onClick={handleChangePassword}>Change Password</Button>
                             </div>
                             <p className="text-sm text-muted-foreground">Member since <span className="font-medium">Jan 2023</span></p>
@@ -98,39 +111,69 @@ const Profile: React.FC = () => {
     )
 }
 
-function UpdateProfileModal() {
+function UpdateProfileModal({ user, updateProfileHandler, form }: { user: any, updateProfileHandler: SubmitHandler<FieldValues>, form: UseFormReturn<FieldValues> }) {
     return (
         <Dialog>
-            <form>
-                <DialogTrigger asChild>
-                    <Button>Update profile</Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                        <DialogTitle>Update profile</DialogTitle>
-                        <DialogDescription>
-                            Make changes to your profile here. Click save when you&apos;re
-                            done.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4">
-                        <div className="grid gap-3">
-                            <Label htmlFor="name-1">Name</Label>
-                            <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-                        </div>
-                        <div className="grid gap-3">
-                            <Label htmlFor="username-1">Username</Label>
-                            <Input id="username-1" name="username" defaultValue="@peduarte" />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button variant="outline">Cancel</Button>
-                        </DialogClose>
-                        <Button type="submit">Save changes</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </form>
+            {/* Trigger stays outside the dialog content */}
+            <DialogTrigger asChild>
+                <Button>Update profile</Button>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Update profile</DialogTitle>
+                    <DialogDescription>
+                        Make changes to your profile here. Click save when you&apos;re done.
+                    </DialogDescription>
+                </DialogHeader>
+
+                {/* Put the actual <form> inside the DialogContent so the submit button is part of the same form DOM */}
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(updateProfileHandler)} className="grid gap-4">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            placeholder={user?.name || "Your Name"}
+                                            value={field.value ?? user?.name}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="phone"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Phone</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            placeholder={user?.phone || "Your Phone"}
+                                            value={field.value ?? user?.phone}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <DialogFooter className="mt-2">
+                            <DialogClose asChild>
+                                <Button variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit">Save changes</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
         </Dialog>
     )
 }
