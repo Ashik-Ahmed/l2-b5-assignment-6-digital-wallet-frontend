@@ -2,11 +2,11 @@ import type { ReactNode } from "react"
 import { Outlet, useNavigate } from "react-router"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../app-sidebar"
-import { CircleUserRound, LogOut, Moon, Settings, Sun, User } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
-import { Button } from "../ui/button"
+import { LogOut, Settings } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api"
 import { useAppDispatch } from "@/redux/hook"
+import userIcon from "@/assets/images/user.png"
 
 
 const UserLayout = ({ children }: { children: ReactNode }) => {
@@ -55,13 +55,21 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
                 <header className="flex justify-between h-16 shrink-0 items-center gap-2 border-b px-4">
                     <SidebarTrigger className="-ml-1" />
                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm">
-                                <CircleUserRound /> {data?.data?.name || "User-Test"}
-                                <span className="sr-only">User Account</span>
-                            </Button>
+                        <DropdownMenuTrigger asChild className="w-10 h-10 rounded-full">
+
+                            <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
+
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                            <div className="flex items-center gap-2">
+                                <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
+                                <div>
+                                    <p>{data?.data?.name || "User-Test"}</p>
+                                    {/* <p className="text-xs italic text-muted-foreground">{data?.data?.email || "Email-Test"}</p> */}
+                                    <p className="capitalize">{data?.data?.role || "Role-Test"}</p>
+                                </div>
+                            </div>
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => navigate("/user/profile")}>
                                 <Settings className="mr-2 h-4 w-4" />
                                 Profile Settings
