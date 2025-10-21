@@ -9,7 +9,7 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     function (config) {
-        console.log("Axios", config);
+        // console.log("Axios", config);
         return config;
     },
     function (error) {

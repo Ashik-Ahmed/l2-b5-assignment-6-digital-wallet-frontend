@@ -10,14 +10,19 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { useForm, type FieldValues, type SubmitHandler, type UseFormReturn } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useUpdateUserProfileMutation } from "@/redux/features/user/user.api"
+import { toast } from "sonner"
 
 const Profile: React.FC = () => {
     const { data } = useUserInfoQuery()
-
+    // console.log("user id:", data?.data?._id);
     const form = useForm();
+
+    const [updateProfile] = useUpdateUserProfileMutation();
 
     // fallback / dummy data when API not ready
     const user = {
+        id: data?.data?._id || undefined,
         name: data?.data?.name || "Anshan Haso",
         role: data?.data?.role || "Project Manager",
         email: data?.data?.email || "hello@tobybelhome.com",
@@ -41,10 +46,19 @@ const Profile: React.FC = () => {
                     .map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])
                     .filter(([_, v]) => Boolean(v))
             );
+            console.log("form values:", formValues);
+            const result = await updateProfile({ userId: user.id, ...formValues }).unwrap();
 
+            if (result.success) {
+                toast.success("Profile updated successfully");
+                form.reset();
+                return true;
+            }
 
         } catch (err) {
             console.log(err);
+            toast.error("Failed to update profile");
+            return false;
         }
     };
 
@@ -112,11 +126,12 @@ const Profile: React.FC = () => {
 }
 
 function UpdateProfileModal({ user, updateProfileHandler, form }: { user: any, updateProfileHandler: SubmitHandler<FieldValues>, form: UseFormReturn<FieldValues> }) {
+    const [open, setOpen] = React.useState(false);
+
     return (
-        <Dialog>
-            {/* Trigger stays outside the dialog content */}
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>Update profile</Button>
+                <Button onClick={() => setOpen(true)}>Update profile</Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[425px]">
@@ -127,9 +142,21 @@ function UpdateProfileModal({ user, updateProfileHandler, form }: { user: any, u
                     </DialogDescription>
                 </DialogHeader>
 
-                {/* Put the actual <form> inside the DialogContent so the submit button is part of the same form DOM */}
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(updateProfileHandler)} className="grid gap-4">
+                    <form onSubmit={form.handleSubmit(async (values) => {
+                        try {
+                            const ok = await updateProfileHandler(values);
+                            // reset only on success
+                            if (ok) {
+                                form.reset();
+                            }
+                        } catch (err) {
+                            console.error("Update failed:", err);
+                        } finally {
+                            // always close dialog whether update succeeded or failed
+                            setOpen(false);
+                        }
+                    })} className="grid gap-4">
                         <FormField
                             control={form.control}
                             name="name"
@@ -167,7 +194,7 @@ function UpdateProfileModal({ user, updateProfileHandler, form }: { user: any, u
 
                         <DialogFooter className="mt-2">
                             <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
+                                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
                             </DialogClose>
                             <Button type="submit">Save changes</Button>
                         </DialogFooter>

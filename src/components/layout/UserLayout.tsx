@@ -60,13 +60,13 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
                             <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
 
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <div className="flex items-center gap-2">
+                        <DropdownMenuContent align="end" className="w-48">
+                            <div className="flex items-center gap-4">
                                 <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
                                 <div>
                                     <p>{data?.data?.name || "User-Test"}</p>
                                     {/* <p className="text-xs italic text-muted-foreground">{data?.data?.email || "Email-Test"}</p> */}
-                                    <p className="capitalize">{data?.data?.role || "Role-Test"}</p>
+                                    <p className="capitalize text-muted-foreground">{data?.data?.role || "Role-Test"}</p>
                                 </div>
                             </div>
                             <DropdownMenuSeparator />
