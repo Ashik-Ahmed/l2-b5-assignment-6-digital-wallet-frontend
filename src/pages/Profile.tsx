@@ -62,10 +62,6 @@ const Profile: React.FC = () => {
         }
     };
 
-    const handleChangePassword = () => {
-        // open change-password modal or navigate
-        console.log("Change password clicked")
-    }
 
     return (
         <div className="min-h-screen bg-background/10">
@@ -97,8 +93,9 @@ const Profile: React.FC = () => {
                         <div className="flex flex-col items-end gap-3">
                             <div className="flex gap-3">
                                 {/* <Button onClick={handleUpdate}>Update Profile</Button> */}
+                                {/* <Button variant="outline" onClick={handleChangePassword}>Change Password</Button> */}
                                 <UpdateProfileModal user={user} updateProfileHandler={updateProfileHandler} form={form} />
-                                <Button variant="outline" onClick={handleChangePassword}>Change Password</Button>
+                                <UpdatePasswordModal />
                             </div>
                             <p className="text-sm text-muted-foreground">Member since <span className="font-medium">Jan 2023</span></p>
                         </div>
@@ -131,7 +128,7 @@ function UpdateProfileModal({ user, updateProfileHandler, form }: { user: any, u
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button onClick={() => setOpen(true)}>Update profile</Button>
+                <Button onClick={() => { form.reset({ name: user?.name ?? "", phone: user?.phone ?? "" }); setOpen(true); }}>Update profile</Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[425px]">
@@ -197,6 +194,154 @@ function UpdateProfileModal({ user, updateProfileHandler, form }: { user: any, u
                                 <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
                             </DialogClose>
                             <Button type="submit">Save changes</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
+function UpdatePasswordModal() {
+    const [open, setOpen] = React.useState(false);
+    const form = useForm();
+
+    const newPassword = form.watch("newPassword");
+    const confirmPassword = form.watch("confirmPassword");
+
+    // disable save button until both fields are present and match
+    const canSave = Boolean(newPassword && confirmPassword && newPassword === confirmPassword);
+
+
+    // real-time validation: set/clear error on confirmPassword when values change
+    React.useEffect(() => {
+        if (confirmPassword === undefined) return; // don't validate until user types
+        if (newPassword && confirmPassword && newPassword !== confirmPassword) {
+            form.setError("confirmPassword", {
+                type: "validate",
+                message: "Passwords do not match",
+            });
+        } else {
+            form.clearErrors("confirmPassword");
+        }
+    }, [newPassword, confirmPassword, form]);
+
+
+    const handleChangePassword: SubmitHandler<FieldValues> = async (data) => {
+        // double-check on submit as well
+        if (data.newPassword !== data.confirmPassword) {
+            form.setError("confirmPassword", {
+                type: "validate",
+                message: "Passwords do not match",
+            });
+            return false;
+        }
+
+        try {
+            console.log("change password data:", data);
+            // call API here...
+            return true;
+        } catch (error) {
+            console.error("Failed to change password:", error);
+            toast.error("Failed to change password");
+            return false;
+        }
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button onClick={() => setOpen(true)} variant="outline">Change Password</Button>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Change Password</DialogTitle>
+                    <DialogDescription>
+                        Change your password here. Click save when you&apos;re done.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(async (values) => {
+                        try {
+                            const ok = await handleChangePassword(values);
+                            // reset only on success
+                            if (ok) {
+                                form.reset();
+                            }
+                        } catch (err) {
+                            console.error("Failed to update password", err);
+                        } finally {
+                            // always close dialog whether update succeeded or failed
+                            setOpen(false);
+                        }
+                    })} className="grid gap-4">
+                        <FormField
+                            control={form.control}
+                            name="currentPassword"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Current Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            {...field}
+                                            placeholder="Current Password"
+                                            value={field.value ?? ""}
+                                            required
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="newPassword"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>New Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            {...field}
+                                            placeholder="New Password"
+                                            value={field.value || ""}
+                                            required
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+
+                        <FormField
+                            control={form.control}
+                            name="confirmPassword"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            {...field}
+                                            placeholder="Confirm Password"
+                                            value={field.value || ""}
+                                            required
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <DialogFooter className="mt-2">
+                            <DialogClose asChild>
+                                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit" disabled={!canSave}>Save changes</Button>
                         </DialogFooter>
                     </form>
                 </Form>
