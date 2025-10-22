@@ -25,7 +25,7 @@ export function LoginForm({
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
             const res = await login(data).unwrap();
-            console.log("login result:", res);
+            // console.log("login result:", res);
             if (res.success) {
                 toast.success("Login successful");
                 navigate(`/${res.data.user.role}/dashboard`);
@@ -35,11 +35,9 @@ export function LoginForm({
                 // }
             }
         } catch (err) {
-            console.log(err);
-            // if (err.status === 401) {
-            //     toast.error("Your account is not verified");
-            //     navigate("/verify", { state: data.email });
-            // }
+            // console.log(err);
+            toast.error(err?.data?.message || "Login failed! Try again.");
+
         }
     };
 

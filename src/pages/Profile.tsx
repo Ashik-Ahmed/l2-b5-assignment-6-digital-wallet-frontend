@@ -10,7 +10,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { useForm, type FieldValues, type SubmitHandler, type UseFormReturn } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useUpdateUserProfileMutation } from "@/redux/features/user/user.api"
+import { useChangePasswordMutation, useUpdateUserProfileMutation } from "@/redux/features/user/user.api"
 import { toast } from "sonner"
 
 const Profile: React.FC = () => {
@@ -95,7 +95,7 @@ const Profile: React.FC = () => {
                                 {/* <Button onClick={handleUpdate}>Update Profile</Button> */}
                                 {/* <Button variant="outline" onClick={handleChangePassword}>Change Password</Button> */}
                                 <UpdateProfileModal user={user} updateProfileHandler={updateProfileHandler} form={form} />
-                                <UpdatePasswordModal />
+                                <UpdatePasswordModal userId={user?.id} />
                             </div>
                             <p className="text-sm text-muted-foreground">Member since <span className="font-medium">Jan 2023</span></p>
                         </div>
@@ -201,9 +201,10 @@ function UpdateProfileModal({ user, updateProfileHandler, form }: { user: any, u
         </Dialog>
     )
 }
-function UpdatePasswordModal() {
+function UpdatePasswordModal({ userId }: { userId: string }) {
     const [open, setOpen] = React.useState(false);
     const form = useForm();
+    const [changePassword] = useChangePasswordMutation();
 
     const newPassword = form.watch("newPassword");
     const confirmPassword = form.watch("confirmPassword");
@@ -238,11 +239,24 @@ function UpdatePasswordModal() {
 
         try {
             console.log("change password data:", data);
-            // call API here...
-            return true;
+            const payload = {
+                userId,
+                currentPassword: data.currentPassword,
+                newPassword: data.newPassword,
+            };
+
+            const changePasswordResult = await changePassword(payload).unwrap();
+
+            if (changePasswordResult.success) {
+                toast.success("Password changed successfully");
+                return true;
+            } else {
+                toast.error("Failed to change password");
+                return false;
+            }
         } catch (error) {
-            console.error("Failed to change password:", error);
-            toast.error("Failed to change password");
+            // console.error("Failed to change password:", error);
+            toast.error(error?.data?.message || "Failed to change password");
             return false;
         }
     }
