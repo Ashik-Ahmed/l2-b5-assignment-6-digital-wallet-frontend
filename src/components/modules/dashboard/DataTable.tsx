@@ -10,7 +10,6 @@ import {
 import type {
     ColumnFiltersState,
     SortingState,
-    VisibilityState,
     ColumnDef,
 } from "@tanstack/react-table"
 import { ChevronDown, } from "lucide-react"
@@ -19,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
     DropdownMenu,
-    DropdownMenuCheckboxItem,
+    DropdownMenuItem,
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -123,8 +122,21 @@ export const columns: ColumnDef<Payment>[] = [
 export function DataTableDemo() {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
+    const [typeFilter, setTypeFilter] = React.useState<string | null>(null)
+
+    // available payment types (keep in sync with Payment.type)
+    const PAYMENT_TYPES: string[] = [
+        "all",
+        "add_money",
+        "withdraw",
+        "send_money",
+        "cash_in",
+        "cash_out",
+        "commission",
+        "cashout_fee",
+        "send_money_fee",
+    ]
 
     const { data: apiResponse } = useGetAllTransactionsQuery()
     const tableData: Payment[] = Array.isArray(apiResponse) ? apiResponse
@@ -140,12 +152,10 @@ export function DataTableDemo() {
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         state: {
             sorting,
             columnFilters,
-            columnVisibility,
             rowSelection,
         },
     })
@@ -164,27 +174,27 @@ export function DataTableDemo() {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
-                            Columns <ChevronDown />
+                            Filter type {typeFilter ? `: ${typeFilter}` : ""}
+                            <ChevronDown />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter((column) => column.getCanHide())
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
+                    <DropdownMenuContent align="end" className="w-auto min-w-[12rem]">
+                        <div className="flex flex-col">
+                            {PAYMENT_TYPES.map((t) => (
+                                <DropdownMenuItem
+                                    key={t}
+                                    className={`text-left px-3 py-2 hover:bg-muted/50 capitalize ${t === typeFilter ? "font-medium" : "font-normal"}`}
+                                    onSelect={() => {
+                                        const value = t === "all" ? undefined : t
+                                        setTypeFilter(t === "all" ? null : t)
+                                        table.getColumn("type")?.setFilterValue(value)
+                                        table.setPageIndex(0)
+                                    }}
+                                >
+                                    {t === "all" ? "All types" : t.replaceAll("_", " ")}
+                                </DropdownMenuItem>
+                            ))}
+                        </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
@@ -262,6 +272,6 @@ export function DataTableDemo() {
                     </Button>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
