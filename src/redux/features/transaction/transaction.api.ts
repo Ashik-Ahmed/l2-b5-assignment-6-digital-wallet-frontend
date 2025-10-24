@@ -7,6 +7,7 @@ const transactionApi = baseApi.injectEndpoints({
                 url: `/transactions`,
                 method: "GET"
             }),
+            providesTags: ["TRANSACTION"],
         }),
     })
 });

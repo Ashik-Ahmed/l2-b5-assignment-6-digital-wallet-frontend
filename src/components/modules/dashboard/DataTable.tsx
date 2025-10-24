@@ -118,35 +118,6 @@ export const columns: ColumnDef<Payment>[] = [
         },
         cell: ({ row }) => <div className="lowercase">{row.getValue("transactionId")}</div>,
     },
-    // {
-    //     id: "actions",
-    //     enableHiding: false,
-    //     cell: ({ row }) => {
-    //         const payment = row.original
-
-    //         return (
-    //             <DropdownMenu>
-    //                 <DropdownMenuTrigger asChild>
-    //                     <Button variant="ghost" className="h-8 w-8 p-0">
-    //                         <span className="sr-only">Open menu</span>
-    //                         <MoreHorizontal />
-    //                     </Button>
-    //                 </DropdownMenuTrigger>
-    //                 <DropdownMenuContent align="end">
-    //                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-    //                     <DropdownMenuItem
-    //                         onClick={() => navigator.clipboard.writeText(payment.id)}
-    //                     >
-    //                         Copy payment ID
-    //                     </DropdownMenuItem>
-    //                     <DropdownMenuSeparator />
-    //                     <DropdownMenuItem>View customer</DropdownMenuItem>
-    //                     <DropdownMenuItem>View payment details</DropdownMenuItem>
-    //                 </DropdownMenuContent>
-    //             </DropdownMenu>
-    //         )
-    //     },
-    // },
 ]
 
 export function DataTableDemo() {
@@ -159,7 +130,6 @@ export function DataTableDemo() {
     const tableData: Payment[] = Array.isArray(apiResponse) ? apiResponse
         : (apiResponse && Array.isArray((apiResponse as any).data) ? (apiResponse as any).data : [])
 
-    console.log("table data:", tableData);
 
     const table = useReactTable({
         data: tableData,

@@ -1,8 +1,12 @@
 import { Badge } from "@/components/ui/badge"
 import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useGetWalletBalanceQuery } from "@/redux/features/wallet/wallet.api"
 import { TrendingDown, TrendingUp } from "lucide-react"
 
 const CardSection = () => {
+
+    const { data } = useGetWalletBalanceQuery(undefined);
+
     return (
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
             <div className="grid gap-4 md:grid-cols-4">
@@ -10,7 +14,7 @@ const CardSection = () => {
                     <CardHeader>
                         <CardDescription>Current Balance</CardDescription>
                         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                            $1,250.00
+                            ${data?.data?.balance.toFixed(2)}
                         </CardTitle>
                         <CardAction>
                             <Badge variant="outline">
@@ -24,15 +28,15 @@ const CardSection = () => {
                             Trending up this month <TrendingUp className="size-4" />
                         </div>
                         <div className="text-muted-foreground">
-                            Visitors for the last 6 months
+                            Your wallet is performing well
                         </div>
                     </CardFooter>
                 </Card>
                 <Card className="@container/card">
                     <CardHeader>
-                        <CardDescription></CardDescription>
+                        <CardDescription>Today's Spent</CardDescription>
                         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                            1,234
+                            ${data?.data?.dailySpent.toFixed(2)}
                         </CardTitle>
                         <CardAction>
                             <Badge variant="outline">
@@ -46,35 +50,35 @@ const CardSection = () => {
                             Down 20% this period <TrendingDown className="size-4" />
                         </div>
                         <div className="text-muted-foreground">
-                            Acquisition needs attention
+                            Good job! Keep your spending in check
                         </div>
                     </CardFooter>
                 </Card>
                 <Card className="@container/card">
                     <CardHeader>
-                        <CardDescription>Active Accounts</CardDescription>
+                        <CardDescription>Daily Limit</CardDescription>
                         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                            45,678
+                            ${data?.data?.dailyLimit}
                         </CardTitle>
-                        <CardAction>
+                        {/* <CardAction>
                             <Badge variant="outline">
                                 <TrendingUp />
                                 +12.5%
                             </Badge>
-                        </CardAction>
+                        </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
                         <div className="line-clamp-1 flex gap-2 font-medium">
-                            Strong user retention <TrendingUp className="size-4" />
+                            Meets your daily limit <TrendingUp className="size-4" />
                         </div>
-                        <div className="text-muted-foreground">Engagement exceed targets</div>
+                        <div className="text-muted-foreground">You can spend up to ${data?.data?.dailyLimit - data?.data?.dailySpent} today</div>
                     </CardFooter>
                 </Card>
                 <Card className="@container/card">
                     <CardHeader>
-                        <CardDescription>Growth Rate</CardDescription>
+                        <CardDescription>Monthly Limit</CardDescription>
                         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                            4.5%
+                            ${data?.data?.monthlyLimit}
                         </CardTitle>
                         <CardAction>
                             <Badge variant="outline">
@@ -85,9 +89,9 @@ const CardSection = () => {
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
                         <div className="line-clamp-1 flex gap-2 font-medium">
-                            Steady performance increase <TrendingUp className="size-4" />
+                            Meets your monthly limit <TrendingUp className="size-4" />
                         </div>
-                        <div className="text-muted-foreground">Meets growth projections</div>
+                        <div className="text-muted-foreground">You can spend up to ${data?.data?.monthlyLimit - data?.data?.dailySpent} this month</div>
                     </CardFooter>
                 </Card>
             </div>
