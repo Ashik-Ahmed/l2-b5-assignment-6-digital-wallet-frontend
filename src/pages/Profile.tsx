@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { useChangePasswordMutation, useUpdateUserProfileMutation } from "@/redux/features/user/user.api"
 import { toast } from "sonner"
+import { Badge } from "@/components/ui/badge"
 
 const Profile: React.FC = () => {
     const { data } = useUserInfoQuery()
@@ -31,9 +32,9 @@ const Profile: React.FC = () => {
         website: data?.data?.website || "N/A",
         avatar: data?.data?.avatar || userIcon,
         stats: {
-            posts: data?.data?.posts ?? 184,
-            projects: data?.data?.projects ?? 32,
-            members: data?.data?.members ?? "4.5K",
+            cashIn: data?.data?.posts ?? 20000,
+            cashOut: data?.data?.projects ?? 3400,
+            sendMoney: data?.data?.members ?? 1200,
         },
     }
 
@@ -78,14 +79,14 @@ const Profile: React.FC = () => {
 
                                     <div>
                                         <h2 className="text-2xl font-semibold">{user.name}</h2>
-                                        {/* <Badge>Pro</Badge> */}
-                                        <p className="capitalize text-sm text-muted-foreground mt-1">{user.role}</p>
+                                        {/* <Badge variant="secondary">Pro</Badge> */}
+                                        <p className="bg-indigo-500 text-white rounded-md py-[0.8px] px-2 w-fit capitalize text-sm font-semibold mt-1">{user.role}</p>
                                     </div>
                                 </div>
                                 <div className="mt-4 grid grid-cols-3 gap-3 max-w-md">
-                                    <StatBox value={user.stats.posts} label="Post" />
-                                    <StatBox value={user.stats.projects} label="Projects" />
-                                    <StatBox value={user.stats.members} label="Members" />
+                                    <StatBox value={user.stats.cashIn} label="Cash-in" />
+                                    <StatBox value={user.stats.cashOut} label="Cash-out" />
+                                    <StatBox value={user.stats.sendMoney} label="Send Money" />
                                 </div>
                             </div>
                         </div>
@@ -396,7 +397,7 @@ function ContactRow({
             href={href}
             target={external ? "_blank" : undefined}
             rel={external ? "noreferrer" : undefined}
-            className="block hover:underline"
+            className="block hover:underline w-fit"
         >
             {content}
         </a>
@@ -405,5 +406,4 @@ function ContactRow({
     )
 }
 
-export default Profile
-// ...existing code...
+export default Profile;
