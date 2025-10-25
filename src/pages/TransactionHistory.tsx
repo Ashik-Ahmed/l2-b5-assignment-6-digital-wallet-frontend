@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from 'react'
 import {
     flexRender,
     getCoreRowModel,
@@ -30,19 +30,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { useGetAllTransactionsQuery } from "@/redux/features/transaction/transaction.api"
-
-
-export type Payment = {
-    date: string
-    amount: number
-    status: "pending" | "completed" | "failed" | "reversed"
-    transactionId: string
-    type: "add_money" | "withdraw" | "send_money" | "cash_in" | "cash_out" | "commission" | "cashout_fee" | "send_money_fee"
-}
+import type { Payment } from '@/components/modules/dashboard/DataTable'
+import { useGetAllTransactionsQuery } from '@/redux/features/transaction/transaction.api'
 
 export const columns: ColumnDef<Payment>[] = [
-
     {
         accessorKey: "createdAt",
         header: "Date",
@@ -97,7 +88,7 @@ export const columns: ColumnDef<Payment>[] = [
     },
 ]
 
-export function DataTableDemo() {
+const TransactionHistory = () => {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [typeFilter, setTypeFilter] = React.useState<string | null>(null)
@@ -122,13 +113,10 @@ export function DataTableDemo() {
         return []
     }, [apiResponse])
 
-    // memoize the visible rows so the reference is stable unless tableData changes
-    const visibleData = React.useMemo(() => tableData.slice(0, 10), [tableData])
-
 
 
     const table = useReactTable({
-        data: visibleData,
+        data: tableData,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -145,7 +133,7 @@ export function DataTableDemo() {
     return (
         <div className="w-full">
             <div>
-                <h2 className="text-2xl font-bold mt-6">Recent Transactions</h2>
+                <h2 className="text-2xl font-bold">Transaction List</h2>
             </div>
             <div className="flex items-center py-2">
                 <div className="relative inline-block">
@@ -236,7 +224,7 @@ export function DataTableDemo() {
                     </TableBody>
                 </Table>
             </div>
-            {/* <div className="flex items-center justify-end space-x-2 py-4">
+            <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="space-x-2">
                     <Button
                         variant="outline"
@@ -255,7 +243,9 @@ export function DataTableDemo() {
                         Next
                     </Button>
                 </div>
-            </div> */}
+            </div>
         </div >
     )
 }
+
+export default TransactionHistory

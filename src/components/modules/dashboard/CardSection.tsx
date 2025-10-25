@@ -8,7 +8,7 @@ const CardSection = () => {
     const { data } = useGetWalletBalanceQuery(undefined);
 
     return (
-        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+        <div className="flex flex-col gap-4 md:gap-6">
             <div className="grid gap-4 md:grid-cols-4">
                 <Card className="@container/card">
                     <CardHeader>

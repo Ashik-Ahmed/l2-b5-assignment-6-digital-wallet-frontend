@@ -9,6 +9,7 @@ import { createBrowserRouter } from "react-router";
 import UserDashboard from "@/pages/UserDashboard";
 import UserLayout from "@/components/layout/UserLayout";
 import Profile from "@/pages/Profile";
+import TransactionHistory from "@/pages/TransactionHistory";
 
 export const router = createBrowserRouter([
     {
@@ -55,7 +56,11 @@ export const router = createBrowserRouter([
             },
             {
                 Component: UserDashboard,
-                path: "transfer",
+                path: "send-money",
+            },
+            {
+                Component: TransactionHistory,
+                path: "transaction-history",
             },
             {
                 Component: Profile,

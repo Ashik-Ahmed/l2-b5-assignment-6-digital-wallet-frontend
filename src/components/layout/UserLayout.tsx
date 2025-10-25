@@ -7,14 +7,23 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api"
 import { useAppDispatch } from "@/redux/hook"
 import userIcon from "@/assets/images/user.png"
+import { ModeToggle } from "./ModeToggler"
 
 
 const UserLayout = ({ children }: { children: ReactNode }) => {
 
-    const { data } = useUserInfoQuery();
+    const { data, isLoading } = useUserInfoQuery(undefined);
     const navigate = useNavigate();
     const [logout] = useLogoutMutation();
     const dispatch = useAppDispatch();
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+
+    if (!data?.data?.email && data?.data?.role !== "user") {
+        navigate("/login");
+    }
 
     const handleLogout = async () => {
         await logout(undefined);
@@ -34,15 +43,19 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
                     },
                     {
                         title: "Deposit",
-                        url: "/user/dashboard/deposit",
+                        url: "/user/deposit",
                     },
                     {
                         title: "Withdraw",
-                        url: "/user/dashboard/withdraw",
+                        url: "/user/withdraw",
                     },
                     {
                         title: "Send Money",
-                        url: "/user/dashboard/send-money",
+                        url: "/user/send-money",
+                    },
+                    {
+                        title: "Transaction History",
+                        url: "/user/transaction-history",
                     },
                 ]
             }
@@ -54,32 +67,37 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
             <SidebarInset>
                 <header className="flex justify-between h-16 shrink-0 items-center gap-2 border-b px-4">
                     <SidebarTrigger className="-ml-1" />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild className="w-10 h-10 rounded-full">
+                    <div className="flex gap-2 items-center">
+                        <div>
+                            <ModeToggle />
+                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild className="w-10 h-10 rounded-full">
 
-                            <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
-
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
-                            <div className="flex items-center gap-4">
                                 <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
-                                <div>
-                                    <p>{data?.data?.name || "User-Test"}</p>
-                                    {/* <p className="text-xs italic text-muted-foreground">{data?.data?.email || "Email-Test"}</p> */}
-                                    <p className="capitalize text-muted-foreground">{data?.data?.role || "Role-Test"}</p>
+
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48">
+                                <div className="flex items-center gap-4">
+                                    <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
+                                    <div>
+                                        <p>{data?.data?.name || "User-Test"}</p>
+                                        {/* <p className="text-xs italic text-muted-foreground">{data?.data?.email || "Email-Test"}</p> */}
+                                        <p className="capitalize text-muted-foreground">{data?.data?.role || "Role-Test"}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => navigate("/user/profile")}>
-                                <Settings className="mr-2 h-4 w-4" />
-                                Profile Settings
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleLogout}>
-                                <LogOut className="mr-2 h-4 w-4" />
-                                Logout
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => navigate("/user/profile")}>
+                                    <Settings className="mr-2 h-4 w-4" />
+                                    Profile Settings
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleLogout}>
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    Logout
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4">
                     <Outlet />
