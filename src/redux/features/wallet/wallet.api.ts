@@ -9,7 +9,15 @@ const walletApi = await baseApi.injectEndpoints({
             }),
             providesTags: ["WALLET"],
         }),
+        cashOut: builder.mutation({
+            query: (cashOutData: { phone: string; amount: number }) => ({
+                url: `/wallets/cash-out`,
+                method: "POST",
+                data: cashOutData,
+            }),
+            invalidatesTags: ["WALLET"],
+        }),
     }),
 });
 
-export const { useGetWalletBalanceQuery } = walletApi;
+export const { useGetWalletBalanceQuery, useCashOutMutation } = walletApi;

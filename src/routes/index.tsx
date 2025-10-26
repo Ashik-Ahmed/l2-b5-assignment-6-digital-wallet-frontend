@@ -10,6 +10,7 @@ import UserDashboard from "@/pages/UserDashboard";
 import UserLayout from "@/components/layout/UserLayout";
 import Profile from "@/pages/Profile";
 import TransactionHistory from "@/pages/TransactionHistory";
+import Withdraw from "@/pages/Withdraw";
 
 export const router = createBrowserRouter([
     {
@@ -51,7 +52,7 @@ export const router = createBrowserRouter([
                 path: "deposit",
             },
             {
-                Component: UserDashboard,
+                Component: Withdraw,
                 path: "withdraw",
             },
             {
