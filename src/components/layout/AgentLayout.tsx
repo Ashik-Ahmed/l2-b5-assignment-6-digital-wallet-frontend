@@ -10,7 +10,7 @@ import userIcon from "@/assets/images/user.png"
 import { ModeToggle } from "./ModeToggler"
 
 
-const UserLayout = ({ children }: { children: ReactNode }) => {
+const AgentLayout = ({ children }: { children: ReactNode }) => {
 
     const { data, isLoading } = useUserInfoQuery(undefined);
     const navigate = useNavigate();
@@ -21,7 +21,7 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
         return <div>Loading...</div>
     }
 
-    if (!data?.data?.email || data?.data?.role !== "user") {
+    if (!data?.data?.email || data?.data?.role !== "agent") {
         navigate("/login");
     }
 
@@ -35,23 +35,23 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
         navMain: [
             {
                 title: "Dashboard",
-                url: "/user/dashboard",
+                url: "/agent/dashboard",
                 items: [
                     {
                         title: "Overview",
-                        url: "/user/dashboard",
+                        url: "/agent/dashboard",
                     },
                     {
-                        title: "Withdraw",
-                        url: "/user/withdraw",
+                        title: "Cash-in",
+                        url: "/agent/cash-in",
                     },
                     {
-                        title: "Send Money",
-                        url: "/user/send-money",
+                        title: "Cash-out",
+                        url: "/agent/cash-out",
                     },
                     {
                         title: "Transaction History",
-                        url: "/user/transaction-history",
+                        url: "/agent/transaction-history",
                     },
                 ]
             }
@@ -104,4 +104,4 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
     )
 }
 
-export default UserLayout
+export default AgentLayout
