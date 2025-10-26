@@ -10,7 +10,15 @@ const agentApi = await baseApi.injectEndpoints({
             }),
             invalidatesTags: ["WALLET", "TRANSACTION"],
         }),
-    }),
-})
+        cashOutByAgent: builder.mutation({
+            query: (cashOutData: { phone: string; amount: number }) => ({
+                url: `/agents/cash-out`,
+                method: "POST",
+                data: cashOutData,
+            }),
+            invalidatesTags: ["WALLET", "TRANSACTION"],
+        }),
+    })
+});
 
-export const { useCashInMutation } = agentApi;
+export const { useCashInMutation, useCashOutByAgentMutation } = agentApi;

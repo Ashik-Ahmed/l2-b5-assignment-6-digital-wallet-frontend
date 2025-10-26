@@ -20,7 +20,7 @@ const AgentLayout = ({ children }: { children: ReactNode }) => {
     if (isLoading) {
         return <div>Loading...</div>
     }
-
+    console.log(data?.data);
     if (!data?.data?.email || data?.data?.role !== "agent") {
         navigate("/login");
     }

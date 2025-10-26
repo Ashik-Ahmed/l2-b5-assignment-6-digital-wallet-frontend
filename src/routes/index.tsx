@@ -15,6 +15,7 @@ import SendMoney from "@/pages/SendMoney";
 import AgentLayout from "@/components/layout/AgentLayout";
 import AgentDashboard from "@/pages/AgentDashboard";
 import AgentCashIn from "@/pages/AgentCashIn";
+import AgentCashOut from "@/pages/AgentCashOut";
 
 export const router = createBrowserRouter([
     {
@@ -82,7 +83,7 @@ export const router = createBrowserRouter([
                 path: "cash-in",
             },
             {
-                Component: SendMoney,
+                Component: AgentCashOut,
                 path: "cash-out",
             },
             {
