@@ -55,7 +55,7 @@ const AgentCardSection = ({ transactions }: { transactions: any }) => {
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
                         <div className="line-clamp-1 flex gap-2 font-medium">
-                            Trending up this month <TrendingUp className="size-4" />
+                            Keep your balance up <TrendingUp className="size-4" />
                         </div>
                         <div className="text-muted-foreground">
                             Your wallet is performing well
@@ -99,7 +99,7 @@ const AgentCardSection = ({ transactions }: { transactions: any }) => {
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
                         <div className="line-clamp-1 flex gap-2 font-medium">
-                            Meets your daily limit <TrendingUp className="size-4" />
+                            Meet your daily target <TrendingUp className="size-4" />
                         </div>
                         <div className="text-muted-foreground">You can spend up to ${data?.data?.dailyLimit - data?.data?.dailySpent} today</div>
                     </CardFooter>
@@ -119,9 +119,9 @@ const AgentCardSection = ({ transactions }: { transactions: any }) => {
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
                         <div className="line-clamp-1 flex gap-2 font-medium">
-                            Meets your monthly limit <TrendingUp className="size-4" />
+                            Make transactions to earn more <TrendingUp className="size-4" />
                         </div>
-                        <div className="text-muted-foreground">You can spend up to ${data?.data?.monthlyLimit - data?.data?.dailySpent} this month</div>
+                        <div className="text-muted-foreground">Earn upto 50,000 per month</div>
                     </CardFooter>
                 </Card>
             </div>

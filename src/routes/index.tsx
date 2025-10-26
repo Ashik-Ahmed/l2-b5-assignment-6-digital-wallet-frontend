@@ -14,6 +14,7 @@ import Withdraw from "@/pages/Withdraw";
 import SendMoney from "@/pages/SendMoney";
 import AgentLayout from "@/components/layout/AgentLayout";
 import AgentDashboard from "@/pages/AgentDashboard";
+import AgentCashIn from "@/pages/AgentCashIn";
 
 export const router = createBrowserRouter([
     {
@@ -77,7 +78,7 @@ export const router = createBrowserRouter([
                 path: "dashboard",
             },
             {
-                Component: Withdraw,
+                Component: AgentCashIn,
                 path: "cash-in",
             },
             {

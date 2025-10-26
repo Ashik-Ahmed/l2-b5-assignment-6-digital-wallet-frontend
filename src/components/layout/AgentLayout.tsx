@@ -83,7 +83,7 @@ const AgentLayout = ({ children }: { children: ReactNode }) => {
                                     </div>
                                 </div>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => navigate("/user/profile")}>
+                                <DropdownMenuItem onClick={() => navigate(`/${data?.data?.role}/profile`)}>
                                     <Settings className="mr-2 h-4 w-4" />
                                     Profile Settings
                                 </DropdownMenuItem>
