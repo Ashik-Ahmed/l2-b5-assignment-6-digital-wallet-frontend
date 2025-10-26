@@ -3,18 +3,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { ArrowRight } from 'lucide-react';
-import { useCashOutMutation, useGetWalletBalanceQuery } from '@/redux/features/wallet/wallet.api';
+import { useCashOutMutation, useGetWalletBalanceQuery, useSendMoneyMutation } from '@/redux/features/wallet/wallet.api';
 import { toast } from 'sonner';
 import { useGetAllTransactionsQuery } from '@/redux/features/transaction/transaction.api';
 import { timeAgo } from '@/utils/timeDifference';
 
 
-const Withdraw = () => {
+const SendMoney = () => {
 
     const form = useForm({ defaultValues: { phone: "", amount: "" } });
     const { data: walletData } = useGetWalletBalanceQuery(undefined);
-    const { data: transactionData } = useGetAllTransactionsQuery({ type: "cash_out" });
-    const [cashOut] = useCashOutMutation();
+    const { data: transactionData } = useGetAllTransactionsQuery({ type: "send_money" });
+    const [sendMoney] = useSendMoneyMutation();
 
     // start of today (midnight)
     const startOfToday = new Date()
@@ -28,21 +28,21 @@ const Withdraw = () => {
     const thirtyDaysAgo = new Date(startOfToday)
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-    const todaysCashoutTotal =
+    const todaysSendmoneyTotal =
         transactionData?.data?.reduce((total = 0, tx) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= startOfToday) total += tx.amount
             return total
         }, 0) ?? 0
 
-    const weeklyCashoutTotal =
+    const weeklySendmoneyTotal =
         transactionData?.data?.reduce((total = 0, tx) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= sevenDaysAgo) total += tx.amount
             return total
         }, 0) ?? 0
 
-    const monthlyCashoutTotal =
+    const monthlySendmoneyTotal =
         transactionData?.data?.reduce((total = 0, tx) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= thirtyDaysAgo) total += tx.amount
@@ -52,16 +52,18 @@ const Withdraw = () => {
     const handleCashout = async (data: { phone: string; amount: string }) => {
 
         try {
-            const cashOutResult = await cashOut({ phone: data.phone, amount: parseFloat(data.amount) }).unwrap();
+            const sendMoneyResult = await sendMoney({ phone: data.phone, amount: parseFloat(data.amount) }).unwrap();
 
-            if (cashOutResult.success) {
-                toast.success("Cash-out successful!");
+            console.log("Send money result:", sendMoneyResult);
+            if (sendMoneyResult.success) {
+                toast.success("Send money successful!");
             }
             else {
-                toast.error("Cash-out failed!");
+                toast.error("Send money failed!");
             }
         } catch (error) {
-            toast.error(error?.data?.message || "Cash-out failed! Try again.");
+            console.log(error);
+            toast.error(error?.data?.message || "Send money failed! Try again.");
         }
 
         return true;
@@ -71,14 +73,14 @@ const Withdraw = () => {
     return (
         <div className="min-h-[70vh] px-4 md:px-8">
             <div className="mx-auto w-full max-w-6xl">
-                <h1 className="text-2xl md:text-3xl font-semibold mb-4 text-violet-700">Cash-out to Agent</h1>
+                <h1 className="text-2xl md:text-3xl font-semibold mb-4 text-violet-700">Send Money to other User</h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                     {/* Left: Form Card */}
                     <div className="bg-card/80 border rounded-lg p-6 shadow-sm">
                         <div className="flex items-start justify-between gap-4 mb-4">
                             <div>
-                                <h2 className="text-lg font-medium">Send cash to an agent</h2>
-                                <p className="text-sm text-muted-foreground mt-1">Enter the agent phone and amount to initiate a secure cash-out.</p>
+                                <h2 className="text-lg font-medium">Send cash to another wallet</h2>
+                                <p className="text-sm text-muted-foreground mt-1">Enter the user's phone and amount to initiate a secure transfer.</p>
                             </div>
                             <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
                                 <span className="text-xs bg-muted rounded px-2 py-1">Instant</span>
@@ -105,11 +107,11 @@ const Withdraw = () => {
                                         name="phone"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Agent Phone Number</FormLabel>
+                                                <FormLabel>Wallet Number</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         {...field}
-                                                        placeholder="Enter agent phone (e.g. 017XXXXXXXX)"
+                                                        placeholder="Enter wallet number (e.g. 017XXXXXXXX)"
                                                         // keep as text or tel to avoid numeric controlled issues on some browsers
                                                         type="tel"
                                                         inputMode="tel"
@@ -152,7 +154,7 @@ const Withdraw = () => {
                                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-2">
                                         <Button type="submit" className="flex-1 inline-flex items-center justify-center gap-2 bg-violet-500 hover:bg-violet-600">
                                             <ArrowRight className="h-4 w-4" />
-                                            Cash Out
+                                            Send Money
                                         </Button>
                                         <Button variant="outline" onClick={() => form.reset()} className="w-full sm:w-auto">
                                             Reset
@@ -160,7 +162,7 @@ const Withdraw = () => {
                                     </div>
 
                                     <p className="text-xs text-muted-foreground mt-3">
-                                        Tip: double check the agent phone number. Transactions may be irreversible.
+                                        Tip: double check the wallet number. Transactions may be irreversible.
                                     </p>
                                 </form>
                             </Form>
@@ -182,32 +184,32 @@ const Withdraw = () => {
                                 <div className="bg-muted/60 rounded p-3 text-center">
                                     <div className="text-sm text-muted-foreground">Today</div>
                                     {/* <div className="font-medium mt-1">${walletData?.data?.dailySpent}</div> */}
-                                    <div className="font-medium mt-1">${todaysCashoutTotal}</div>
+                                    <div className="font-medium mt-1">${todaysSendmoneyTotal}</div>
                                 </div>
                                 <div className="bg-muted/60 rounded p-3 text-center">
                                     <div className="text-sm text-muted-foreground">Week</div>
-                                    <div className="font-medium mt-1">${weeklyCashoutTotal}</div>
+                                    <div className="font-medium mt-1">${weeklySendmoneyTotal}</div>
                                 </div>
                                 <div className="bg-muted/60 rounded p-3 text-center">
                                     <div className="text-sm text-muted-foreground">Month</div>
-                                    <div className="font-medium mt-1">${monthlyCashoutTotal}</div>
+                                    <div className="font-medium mt-1">${monthlySendmoneyTotal}</div>
                                 </div>
                             </div>
                         </div>
 
                         <div className="bg-card/80 border rounded-lg p-4 shadow-sm">
-                            <h4 className="font-medium mb-3">Recent Cash-outs</h4>
+                            <h4 className="font-medium mb-3">Recent Send Money</h4>
                             <ul className="space-y-3">
                                 {
                                     transactionData?.data?.length ? transactionData?.data?.slice(0, 5)?.map((tx) => (
                                         <li key={tx.id} className="flex items-center justify-between text-sm">
                                             <div>
-                                                <div className="font-medium">Agent : +88 {tx?.toWallet?.phone} <span className='text-muted-foreground italic text-xs'>({tx?.toWallet?.name})</span></div>
+                                                <div className="font-medium">Wallet : +88 {tx?.toWallet?.phone} <span className='text-muted-foreground italic text-xs'>({tx?.toWallet?.name})</span></div>
                                                 <div className="text-muted-foreground text-xs">{timeAgo(tx.createdAt)}</div>
                                             </div>
                                             <div className="font-semibold">${tx?.amount?.toFixed(2)}</div>
                                         </li>
-                                    )) : <li className="text-sm text-muted-foreground">No recent cash-outs found.</li>
+                                    )) : <li className="text-sm text-muted-foreground">No recent send money found.</li>
                                 }
                             </ul>
                         </div>
@@ -218,4 +220,4 @@ const Withdraw = () => {
     )
 }
 
-export default Withdraw
+export default SendMoney;

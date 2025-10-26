@@ -12,8 +12,8 @@ const CardSection = () => {
             <div className="grid gap-4 md:grid-cols-4">
                 <Card className="@container/card">
                     <CardHeader>
-                        <CardDescription>Current Balance</CardDescription>
-                        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                        <CardDescription className="text-violet-700">Current Balance</CardDescription>
+                        <CardTitle className="text-violet-700 text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             ${data?.data?.balance.toFixed(2)}
                         </CardTitle>
                         <CardAction>
@@ -34,8 +34,8 @@ const CardSection = () => {
                 </Card>
                 <Card className="@container/card">
                     <CardHeader>
-                        <CardDescription>Today's Spent</CardDescription>
-                        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                        <CardDescription className="text-violet-700">Today's Spent</CardDescription>
+                        <CardTitle className="text-violet-700 text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             ${data?.data?.dailySpent.toFixed(2)}
                         </CardTitle>
                         <CardAction>
@@ -56,8 +56,8 @@ const CardSection = () => {
                 </Card>
                 <Card className="@container/card">
                     <CardHeader>
-                        <CardDescription>Daily Limit</CardDescription>
-                        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                        <CardDescription className="text-violet-700">Daily Limit</CardDescription>
+                        <CardTitle className="text-violet-700 text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             ${data?.data?.dailyLimit}
                         </CardTitle>
                         {/* <CardAction>
@@ -76,16 +76,16 @@ const CardSection = () => {
                 </Card>
                 <Card className="@container/card">
                     <CardHeader>
-                        <CardDescription>Monthly Limit</CardDescription>
-                        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                        <CardDescription className="text-violet-700">Monthly Limit</CardDescription>
+                        <CardTitle className="text-violet-700 text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             ${data?.data?.monthlyLimit}
                         </CardTitle>
-                        <CardAction>
+                        {/* <CardAction>
                             <Badge variant="outline">
                                 <TrendingUp />
                                 +4.5%
                             </Badge>
-                        </CardAction>
+                        </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
                         <div className="line-clamp-1 flex gap-2 font-medium">

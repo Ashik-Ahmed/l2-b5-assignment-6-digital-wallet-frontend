@@ -81,7 +81,7 @@ export const columns: ColumnDef<Payment>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div className={`capitalize w-fit px-1 py-[0.5px] rounded text-white font-medium ${row.getValue("status") === "completed" ? "bg-green-500" : "bg-red-400"}`}>{row.getValue("status")}</div>,
+        cell: ({ row }) => <div className={`capitalize w-fit px-1 py-[0.5px] rounded text-white font-medium ${row.getValue("status") === "completed" ? "bg-violet-500" : "bg-red-400"}`}>{row.getValue("status")}</div>,
     },
     {
         accessorKey: "transactionId",
@@ -145,7 +145,7 @@ export function DataTableDemo() {
     return (
         <div className="w-full">
             <div>
-                <h2 className="text-2xl font-bold mt-6">Recent Transactions</h2>
+                <h2 className="text-violet-700 text-2xl font-bold mt-6">Recent Transactions</h2>
             </div>
             <div className="flex items-center py-2">
                 <div className="relative inline-block">

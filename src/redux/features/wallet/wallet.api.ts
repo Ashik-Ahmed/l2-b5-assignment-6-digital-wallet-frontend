@@ -15,9 +15,17 @@ const walletApi = await baseApi.injectEndpoints({
                 method: "POST",
                 data: cashOutData,
             }),
-            invalidatesTags: ["WALLET"],
+            invalidatesTags: ["WALLET", "TRANSACTION"],
+        }),
+        sendMoney: builder.mutation({
+            query: (sendMoneyData: { phone: string; amount: number }) => ({
+                url: `/wallets/send-money`,
+                method: "POST",
+                data: sendMoneyData,
+            }),
+            invalidatesTags: ["WALLET", "TRANSACTION"],
         }),
     }),
 });
 
-export const { useGetWalletBalanceQuery, useCashOutMutation } = walletApi;
+export const { useGetWalletBalanceQuery, useCashOutMutation, useSendMoneyMutation } = walletApi;

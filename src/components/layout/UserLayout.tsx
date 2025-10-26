@@ -42,10 +42,6 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
                         url: "/user/dashboard",
                     },
                     {
-                        title: "Deposit",
-                        url: "/user/deposit",
-                    },
-                    {
                         title: "Withdraw",
                         url: "/user/withdraw",
                     },
