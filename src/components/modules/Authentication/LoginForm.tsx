@@ -29,10 +29,6 @@ export function LoginForm({
             if (res.success) {
                 toast.success("Login successful");
                 navigate(`/${res.data.user.role}/dashboard`);
-
-                // if (res.data.) {
-                //     navigate("/");
-                // }
             }
         } catch (err) {
             // console.log(err);

@@ -12,7 +12,7 @@ import { ModeToggle } from "./ModeToggler"
 
 const UserLayout = ({ children }: { children: ReactNode }) => {
 
-    const { data, isLoading } = useUserInfoQuery(undefined);
+    const { data, isLoading, isFetching } = useUserInfoQuery(undefined);
     const navigate = useNavigate();
     const [logout] = useLogoutMutation();
     const dispatch = useAppDispatch();

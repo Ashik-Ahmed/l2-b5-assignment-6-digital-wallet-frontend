@@ -1,11 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Badge } from "@/components/ui/badge"
 import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useGetWalletBalanceQuery } from "@/redux/features/wallet/wallet.api"
 import { TrendingDown, TrendingUp } from "lucide-react"
 
-const CardSection = () => {
+const CardSection = ({ transactions }: { transactions: any }) => {
 
     const { data } = useGetWalletBalanceQuery(undefined);
+
+    const dailyTransactionsTotal = transactions?.data?.reduce((acc: number, tx: any) => {
+        if (new Date(tx.createdAt).toDateString() === new Date().toDateString()) {
+            return acc + tx.amount;
+        }
+        return acc;
+    }, 0) || 0;
+
 
     return (
         <div className="flex flex-col gap-4 md:gap-6">
@@ -34,9 +43,9 @@ const CardSection = () => {
                 </Card>
                 <Card className="@container/card">
                     <CardHeader>
-                        <CardDescription className="text-violet-700">Today's Spent</CardDescription>
+                        <CardDescription className="text-violet-700">Today's Transaction</CardDescription>
                         <CardTitle className="text-violet-700 text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                            ${data?.data?.dailySpent.toFixed(2)}
+                            ${dailyTransactionsTotal?.toFixed(2)}
                         </CardTitle>
                         <CardAction>
                             <Badge variant="outline">

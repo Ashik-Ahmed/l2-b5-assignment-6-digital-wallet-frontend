@@ -31,10 +31,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import type { Payment } from '@/components/modules/dashboard/DataTable'
+import type { Transaction } from '@/components/modules/dashboard/DataTable'
 import { useGetAllTransactionsQuery } from '@/redux/features/transaction/transaction.api'
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Transaction>[] = [
     {
         accessorKey: "createdAt",
         header: "Date",
@@ -108,7 +108,7 @@ const TransactionHistory = () => {
     ]
 
     const { data: apiResponse } = useGetAllTransactionsQuery(undefined)
-    const tableData: Payment[] = React.useMemo(() => {
+    const tableData: Transaction[] = React.useMemo(() => {
         if (Array.isArray(apiResponse)) return apiResponse
         if (apiResponse && Array.isArray((apiResponse as any).data)) return (apiResponse as any).data
         return []

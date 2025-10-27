@@ -80,7 +80,7 @@ const AgentCardSection = ({ transactions }: { transactions: any }) => {
                             Down 20% this period <TrendingDown className="size-4" />
                         </div>
                         <div className="text-muted-foreground">
-                            Good job! Keep your spending in check
+                            Cash-in to keep your balance up
                         </div>
                     </CardFooter>
                 </Card>
@@ -101,7 +101,7 @@ const AgentCardSection = ({ transactions }: { transactions: any }) => {
                         <div className="line-clamp-1 flex gap-2 font-medium">
                             Meet your daily target <TrendingUp className="size-4" />
                         </div>
-                        <div className="text-muted-foreground">You can spend up to ${data?.data?.dailyLimit - data?.data?.dailySpent} today</div>
+                        <div className="text-muted-foreground">Cash-out to keep your balance up</div>
                     </CardFooter>
                 </Card>
                 <Card className="@container/card">

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react"
 import {
     flexRender,
@@ -30,10 +31,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { useGetAllTransactionsQuery } from "@/redux/features/transaction/transaction.api"
 
 
-export type Payment = {
+export type Transaction = {
     date: string
     amount: number
     status: "pending" | "completed" | "failed" | "reversed"
@@ -41,7 +41,7 @@ export type Payment = {
     type: "add_money" | "withdraw" | "send_money" | "cash_in" | "cash_out" | "commission" | "cashout_fee" | "send_money_fee"
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Transaction>[] = [
 
     {
         accessorKey: "createdAt",
@@ -97,10 +97,11 @@ export const columns: ColumnDef<Payment>[] = [
     },
 ]
 
-export function DataTableDemo() {
+export function DataTableDemo({ transactions }: { transactions: any }) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [typeFilter, setTypeFilter] = React.useState<string | null>(null)
+    // const { data: transactions } = useGetAllTransactionsQuery(undefined)
 
     // available payment types (keep in sync with Payment.type)
     const PAYMENT_TYPES: string[] = [
@@ -115,12 +116,11 @@ export function DataTableDemo() {
         "send_money_fee",
     ]
 
-    const { data: apiResponse } = useGetAllTransactionsQuery(undefined)
-    const tableData: Payment[] = React.useMemo(() => {
-        if (Array.isArray(apiResponse)) return apiResponse
-        if (apiResponse && Array.isArray((apiResponse as any).data)) return (apiResponse as any).data
+    const tableData: Transaction[] = React.useMemo(() => {
+        if (Array.isArray(transactions)) return transactions
+        if (transactions && Array.isArray((transactions as any).data)) return (transactions as any).data
         return []
-    }, [apiResponse])
+    }, [transactions])
 
     // memoize the visible rows so the reference is stable unless tableData changes
     const visibleData = React.useMemo(() => tableData.slice(0, 10), [tableData])
