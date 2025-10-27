@@ -17,6 +17,8 @@ import AgentDashboard from "@/pages/AgentDashboard";
 import AgentCashIn from "@/pages/AgentCashIn";
 import AgentCashOut from "@/pages/AgentCashOut";
 import AdminLayout from "@/components/layout/AdminLayout";
+import AdminDashboard from "@/pages/AdminDashboard";
+import AdminTransactionHistory from "@/pages/AdminTransactionHistory";
 
 export const router = createBrowserRouter([
     {
@@ -102,7 +104,7 @@ export const router = createBrowserRouter([
         path: "/admin",
         children: [
             {
-                Component: AgentDashboard,
+                Component: AdminDashboard,
                 path: "dashboard",
             },
             {
@@ -114,7 +116,7 @@ export const router = createBrowserRouter([
                 path: "manage-agents",
             },
             {
-                Component: TransactionHistory,
+                Component: AdminTransactionHistory,
                 path: "transaction-history",
             },
             {

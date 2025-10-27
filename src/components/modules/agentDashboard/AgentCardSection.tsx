@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Badge } from "@/components/ui/badge"
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useGetWalletBalanceQuery } from "@/redux/features/wallet/wallet.api"
 import { TrendingDown, TrendingUp } from "lucide-react"
 
