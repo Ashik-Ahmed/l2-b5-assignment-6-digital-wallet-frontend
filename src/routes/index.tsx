@@ -16,6 +16,7 @@ import AgentLayout from "@/components/layout/AgentLayout";
 import AgentDashboard from "@/pages/AgentDashboard";
 import AgentCashIn from "@/pages/AgentCashIn";
 import AgentCashOut from "@/pages/AgentCashOut";
+import AdminLayout from "@/components/layout/AdminLayout";
 
 export const router = createBrowserRouter([
     {
@@ -85,6 +86,32 @@ export const router = createBrowserRouter([
             {
                 Component: AgentCashOut,
                 path: "cash-out",
+            },
+            {
+                Component: TransactionHistory,
+                path: "transaction-history",
+            },
+            {
+                Component: Profile,
+                path: "profile",
+            },
+        ],
+    },
+    {
+        Component: AdminLayout,
+        path: "/admin",
+        children: [
+            {
+                Component: AgentDashboard,
+                path: "dashboard",
+            },
+            {
+                Component: AgentCashIn,
+                path: "manage-users",
+            },
+            {
+                Component: AgentCashOut,
+                path: "manage-agents",
             },
             {
                 Component: TransactionHistory,

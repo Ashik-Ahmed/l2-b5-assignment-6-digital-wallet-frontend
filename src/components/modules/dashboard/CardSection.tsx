@@ -25,12 +25,12 @@ const CardSection = ({ transactions }: { transactions: any }) => {
                         <CardTitle className="text-violet-700 text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             ${data?.data?.balance.toFixed(2)}
                         </CardTitle>
-                        <CardAction>
+                        {/* <CardAction>
                             <Badge variant="outline">
                                 <TrendingUp />
                                 +12.5%
                             </Badge>
-                        </CardAction>
+                        </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
                         <div className="line-clamp-1 flex gap-2 font-medium">
@@ -47,12 +47,12 @@ const CardSection = ({ transactions }: { transactions: any }) => {
                         <CardTitle className="text-violet-700 text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             ${dailyTransactionsTotal?.toFixed(2)}
                         </CardTitle>
-                        <CardAction>
+                        {/* <CardAction>
                             <Badge variant="outline">
                                 <TrendingDown />
                                 -20%
                             </Badge>
-                        </CardAction>
+                        </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
                         <div className="line-clamp-1 flex gap-2 font-medium">
