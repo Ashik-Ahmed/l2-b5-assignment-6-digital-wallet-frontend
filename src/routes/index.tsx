@@ -19,6 +19,7 @@ import AgentCashOut from "@/pages/AgentCashOut";
 import AdminLayout from "@/components/layout/AdminLayout";
 import AdminDashboard from "@/pages/AdminDashboard";
 import AdminTransactionHistory from "@/pages/AdminTransactionHistory";
+import AdminManageUsers from "@/pages/AdminManageUsers";
 
 export const router = createBrowserRouter([
     {
@@ -108,7 +109,7 @@ export const router = createBrowserRouter([
                 path: "dashboard",
             },
             {
-                Component: AgentCashIn,
+                Component: AdminManageUsers,
                 path: "manage-users",
             },
             {

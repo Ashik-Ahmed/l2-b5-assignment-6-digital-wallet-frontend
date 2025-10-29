@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // ...existing code...
 import React from "react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
@@ -12,10 +13,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { useChangePasswordMutation, useUpdateUserProfileMutation } from "@/redux/features/user/user.api"
 import { toast } from "sonner"
-import { Badge } from "@/components/ui/badge"
 
 const Profile: React.FC = () => {
-    const { data } = useUserInfoQuery()
+    const { data } = useUserInfoQuery(undefined)
     // console.log("user id:", data?.data?._id);
     const form = useForm();
 
@@ -110,7 +110,6 @@ const Profile: React.FC = () => {
                         <ContactRow icon={<MapPin className="h-4 w-4" />} label={user.country} />
                         <ContactRow icon={<Globe className="h-4 w-4" />} label={user.website} href={user.website} external />
                     </div>
-
                     <Separator />
 
                     <div className="p-6">
