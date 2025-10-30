@@ -34,7 +34,10 @@ import {
 import { useMemo, useState } from "react"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { useForm, type FieldValues, type SubmitHandler, type UseFormReturn } from "react-hook-form"
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 
 export type User = {
     name: string
@@ -77,6 +80,20 @@ export const columns: ColumnDef<User>[] = [
         cell: ({ row }) => <div className={`capitalize w-fit px-1 py-[0.5px] rounded text-white font-medium ${row.getValue("role") === "user" ? "bg-gray-500" : (row.getValue("role") === "admin" ? "bg-violet-500" : "bg-blue-400")}`}>{row.getValue("role")}</div>,
     },
     {
+        accessorKey: "isApproved",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost">
+                    Agent Approval
+                </Button>
+            )
+        },
+        cell: ({ row }) => <div>
+            <AgentIsApprovedCell row={row} />
+        </div>,
+    },
+    {
         accessorKey: "isActive",
         header: ({ column }) => {
             return (
@@ -98,7 +115,7 @@ export const columns: ColumnDef<User>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="flex ">
+        cell: ({ row }) => <div>
             {/* <Button onClick={() => { console.log(row.original); }} className="text-xs text-white font-medium bg-blue-400 px-2  rounded">Edit</Button> */}
             <UpdateUserModal user={row.original} />
             {/* <Button className="text-xs text-white font-medium bg-red-400 px-2  rounded ml-2">Delete</Button> */}
@@ -259,13 +276,26 @@ export default AdminManageUsers
 
 function UpdateUserModal({ user, updateProfileHandler }: { user: any, updateProfileHandler: SubmitHandler<FieldValues> }) {
     const [editUserDialog, setEditUserDialog] = useState(false);
-    console.log(user)
-    const form = useForm();
+    // console.log(user)
+    const form = useForm({
+        defaultValues: {
+            name: user?.name ?? "",
+            phone: user?.phone ?? "",
+            role: user?.role ?? "",
+            email: user?.email ?? "",
+            isActive: user?.isActive ?? "active",
+            isApproved: user?.isApproved ?? "approved",
+        },
+    });
+
+    const handleEditUser: SubmitHandler<FieldValues> = async (updatedData) => {
+        console.log("form data:", updatedData);
+    }
 
     return (
         <Dialog open={editUserDialog} onOpenChange={setEditUserDialog}>
             <DialogTrigger asChild>
-                <Button size="sm" onClick={() => { form.reset({ name: user?.name ?? "", phone: user?.phone ?? "" }); setEditUserDialog(true); }}>
+                <Button size="sm" onClick={() => { form.reset({ name: user?.name ?? "", phone: user?.phone ?? "", role: user?.role ?? "", email: user?.email ?? "", isActive: user?.isActive ?? "active", isApproved: user?.isApproved ?? "approved" }); setEditUserDialog(true); }}>
                     <Edit className="h-4 w-4" />
                     Edit
                 </Button>
@@ -282,7 +312,7 @@ function UpdateUserModal({ user, updateProfileHandler }: { user: any, updateProf
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(async (values) => {
                         try {
-                            const ok = await updateProfileHandler(values);
+                            const ok = await handleEditUser(values);
                             // reset only on success
                             if (ok) {
                                 form.reset();
@@ -311,6 +341,23 @@ function UpdateUserModal({ user, updateProfileHandler }: { user: any, updateProf
                                 </FormItem>
                             )}
                         />
+                        {/* <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            placeholder={user?.email || "Your Email"}
+                                            value={field.value ?? user?.email}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        /> */}
                         <FormField
                             control={form.control}
                             name="phone"
@@ -328,6 +375,48 @@ function UpdateUserModal({ user, updateProfileHandler }: { user: any, updateProf
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name="isActive"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Active Status</FormLabel>
+                                    <FormControl>
+                                        <Select>
+                                            <SelectTrigger className="w-[180px]">
+                                                <SelectValue placeholder="Active Status" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="active">Active</SelectItem>
+                                                <SelectItem value="inactive">Inactive</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="isApproved"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Approve Status</FormLabel>
+                                    <FormControl>
+                                        <Select>
+                                            <SelectTrigger className="w-[180px]">
+                                                <SelectValue placeholder="Approve Status" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="approve">Approve</SelectItem>
+                                                <SelectItem value="notApprove">Not Approve</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
                         <DialogFooter className="mt-2">
                             <DialogClose asChild>
@@ -339,5 +428,38 @@ function UpdateUserModal({ user, updateProfileHandler }: { user: any, updateProf
                 </Form>
             </DialogContent>
         </Dialog>
+    )
+}
+
+function AgentIsApprovedCell({ row }: { row: any }) {
+
+    const handleAgentApproval = async (id: any, isApproved: boolean) => {
+        console.log("id", id, "isApproved", isApproved);
+        // try {
+        //     await handleUpdateAgentApproval(id, isApproved);
+        // } catch (err) {
+        //     console.error("Update failed:", err);
+        // }
+    }
+
+    return (
+        <div>
+            {
+                row.getValue("role") === "agent" ?
+                    <div>
+                        {/* <div className={`capitalize w-fit px-1 py-[0.5px] rounded font-medium ${(row.getValue("isApproved") === true ? "bg-blue-400 text-white" : "")}`}>
+                            {row.getValue("isApproved") === true ? "Approved" : "Not Approved"}
+                        </div> */}
+                        <div className="flex items-center space-x-2">
+                            <Switch id="isApproved" checked={row.getValue("isApproved")} onCheckedChange={(value) => handleAgentApproval(row.original._id, value)} />
+                            <Label htmlFor="isApproved" className={`capitalize w-fit px-1 py-1 rounded font-medium ${(row.getValue("isApproved") === true ? "bg-blue-400 text-white" : "")}`}>
+                                {row.getValue("isApproved") === true ? "Approved" : "Not Approved"}
+                            </Label>
+                        </div>
+                    </div>
+                    :
+                    <div>N/A</div>
+            }
+        </div>
     )
 }

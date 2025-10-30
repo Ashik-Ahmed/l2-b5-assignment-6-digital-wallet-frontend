@@ -47,7 +47,7 @@ const Profile: React.FC = () => {
                     .map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])
                     .filter(([_, v]) => Boolean(v))
             );
-            console.log("form values:", formValues);
+            // console.log("form values:", formValues);
             const result = await updateProfile({ userId: user.id, ...formValues }).unwrap();
 
             if (result.success) {
