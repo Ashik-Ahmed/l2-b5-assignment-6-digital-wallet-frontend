@@ -26,7 +26,18 @@ const adminApi = await baseApi.injectEndpoints({
             }),
             providesTags: ["ALL_AGENT"],
         }),
+        agentApprovalByAdmin: builder.mutation({
+            query: ({ id, isApproved }: { id: string; isApproved: boolean }) => ({
+                url: `/admin/agents/${id}/approve`,
+                method: "PATCH",
+                data: { isApproved },
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }),
+            invalidatesTags: ["ALL_USER"],
+        }),
     }),
 })
 
-export const { useGetAllTransactionsByAdminQuery, useGetAllUsersByAdminQuery, useGetAllAgentsByAdminQuery } = adminApi
+export const { useGetAllTransactionsByAdminQuery, useGetAllUsersByAdminQuery, useGetAllAgentsByAdminQuery, useAgentApprovalByAdminMutation } = adminApi

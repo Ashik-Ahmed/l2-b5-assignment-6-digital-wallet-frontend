@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useGetAllUsersByAdminQuery } from "@/redux/features/admin/admin.api"
+import { useAgentApprovalByAdminMutation, useGetAllUsersByAdminQuery } from "@/redux/features/admin/admin.api"
 import {
     flexRender,
     getCoreRowModel,
@@ -38,6 +38,7 @@ import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
 
 export type User = {
     name: string
@@ -432,14 +433,23 @@ function UpdateUserModal({ user, updateProfileHandler }: { user: any, updateProf
 }
 
 function AgentIsApprovedCell({ row }: { row: any }) {
+    const [agentApprovalByAdmin] = useAgentApprovalByAdminMutation();
 
     const handleAgentApproval = async (id: any, isApproved: boolean) => {
         console.log("id", id, "isApproved", isApproved);
-        // try {
-        //     await handleUpdateAgentApproval(id, isApproved);
-        // } catch (err) {
-        //     console.error("Update failed:", err);
-        // }
+        try {
+            const result = await agentApprovalByAdmin({ id, isApproved }).unwrap();
+            console.log(result);
+            if (result.success) {
+                toast.success("Agent status updated successfully");
+            }
+            else {
+                toast.error("Failed to update agent status");
+            }
+        } catch (err) {
+            console.error("Update failed:", err);
+            toast.error("Failed to update agent status");
+        }
     }
 
     return (
@@ -452,7 +462,7 @@ function AgentIsApprovedCell({ row }: { row: any }) {
                         </div> */}
                         <div className="flex items-center space-x-2">
                             <Switch id="isApproved" checked={row.getValue("isApproved")} onCheckedChange={(value) => handleAgentApproval(row.original._id, value)} />
-                            <Label htmlFor="isApproved" className={`capitalize w-fit px-1 py-1 rounded font-medium ${(row.getValue("isApproved") === true ? "bg-blue-400 text-white" : "")}`}>
+                            <Label htmlFor="isApproved" className={`capitalize w-fit px-1 py-1 rounded font-medium ${(row.getValue("isApproved") === true ? "bg-blue-400 text-white" : "bg-gray-200")}`}>
                                 {row.getValue("isApproved") === true ? "Approved" : "Not Approved"}
                             </Label>
                         </div>
