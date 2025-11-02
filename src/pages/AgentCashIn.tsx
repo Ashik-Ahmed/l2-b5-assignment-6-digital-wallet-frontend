@@ -72,7 +72,7 @@ const AgentCashIn = () => {
     return (
         <div className="min-h-[70vh] px-4 md:px-8">
             <div className="mx-auto w-full max-w-6xl">
-                <h1 className="text-2xl md:text-3xl font-semibold mb-4 text-violet-700">Cash-in by Agent</h1>
+                <h1 className="text-2xl md:text-3xl font-semibold mb-4 text-violet-700"><span className='bg-violet-500 text-white px-2 rounded'>Cash-in</span> by Agent</h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                     {/* Left: Form Card */}
                     <div className="bg-card/80 border rounded-lg p-6 shadow-sm">

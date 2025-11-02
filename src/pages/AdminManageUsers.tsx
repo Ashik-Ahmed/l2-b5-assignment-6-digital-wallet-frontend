@@ -436,19 +436,19 @@ function AgentIsApprovedCell({ row }: { row: any }) {
     const [agentApprovalByAdmin] = useAgentApprovalByAdminMutation();
 
     const handleAgentApproval = async (id: any, isApproved: boolean) => {
-        console.log("id", id, "isApproved", isApproved);
+
         try {
             const result = await agentApprovalByAdmin({ id, isApproved }).unwrap();
-            console.log(result);
+
             if (result.success) {
                 toast.success("Agent status updated successfully");
             }
             else {
                 toast.error("Failed to update agent status");
             }
-        } catch (err) {
-            console.error("Update failed:", err);
-            toast.error("Failed to update agent status");
+        } catch (err: any) {
+
+            toast.error(err?.data?.message || "Failed to update agent status");
         }
     }
 
