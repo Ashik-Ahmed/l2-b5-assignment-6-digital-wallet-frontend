@@ -13,7 +13,7 @@ import type {
     SortingState,
     ColumnDef,
 } from "@tanstack/react-table"
-import { ChevronDown, SearchIcon, } from "lucide-react"
+import { ArrowUpDown, ChevronDown, SearchIcon, } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -46,7 +46,17 @@ export const columns: ColumnDef<Payment>[] = [
 
     {
         accessorKey: "createdAt",
-        header: "Date",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Date
+                    <ArrowUpDown />
+                </Button>
+            )
+        },
         cell: ({ row }) => (
             <div>{row.getValue("createdAt")?.split("T")[0]}</div>
         ),
@@ -60,7 +70,17 @@ export const columns: ColumnDef<Payment>[] = [
     },
     {
         accessorKey: "amount",
-        header: () => <div>Amount</div>,
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Amount
+                    <ArrowUpDown />
+                </Button>
+            )
+        },
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("amount"))
 
@@ -82,7 +102,7 @@ export const columns: ColumnDef<Payment>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div className={`capitalize w-fit px-1 py-[0.5px] rounded text-white font-medium ${row.getValue("status") === "completed" ? "bg-violet-500" : "bg-red-400"}`}>{row.getValue("status")}</div>,
+        cell: ({ row }) => <div className={`capitalize w-fit px-1 py-[0.5px] rounded font-medium ${row.getValue("status") === "completed" ? "bg-green-100 text-green-700" : "bg-red-400"}`}>{row.getValue("status")}</div>,
     },
     {
         accessorKey: "transactionId",

@@ -13,7 +13,7 @@ import type {
     SortingState,
     ColumnDef,
 } from "@tanstack/react-table"
-import { ChevronDown, Eye, SearchIcon, } from "lucide-react"
+import { ArrowUpDown, ChevronDown, Eye, SearchIcon, } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -32,14 +32,23 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import type { Transaction } from '@/components/modules/dashboard/DataTable'
-import { useGetAllTransactionsQuery } from '@/redux/features/transaction/transaction.api'
 import { useGetAllTransactionsByAdminQuery } from '@/redux/features/admin/admin.api'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
 export const columns: ColumnDef<Transaction>[] = [
     {
         accessorKey: "createdAt",
-        header: "Date",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Date
+                    <ArrowUpDown />
+                </Button>
+            )
+        },
         cell: ({ row }) => (
             <div>{row.getValue("createdAt")?.split("T")[0]}</div>
         ),
@@ -53,7 +62,17 @@ export const columns: ColumnDef<Transaction>[] = [
     },
     {
         accessorKey: "amount",
-        header: () => <div>Amount</div>,
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Amount
+                    <ArrowUpDown />
+                </Button>
+            )
+        },
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("amount"))
 
@@ -75,7 +94,7 @@ export const columns: ColumnDef<Transaction>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div className={`capitalize w-fit px-1 py-[0.5px] rounded text-white font-medium ${row.getValue("status") === "completed" ? "bg-violet-500" : "bg-red-400"}`}>{row.getValue("status")}</div>,
+        cell: ({ row }) => <div className={`capitalize w-fit px-1 py-[0.5px] rounded font-medium ${row.getValue("status") === "completed" ? "bg-green-100 text-green-700" : "bg-red-400"}`}>{row.getValue("status")}</div>,
     },
     {
         accessorKey: "_id",
@@ -127,8 +146,6 @@ const AdminTransactionHistory = () => {
         if (apiResponse && Array.isArray((apiResponse as any).data)) return (apiResponse as any).data
         return []
     }, [apiResponse])
-
-    console.log("admin trans:", apiResponse);
 
     const table = useReactTable({
         data: tableData,
@@ -265,14 +282,14 @@ const AdminTransactionHistory = () => {
 
 function TransactionDetailsCell({ row: transaction }: { row: any }) {
     const [open, setOpen] = useState(false);
-    console.log(transaction);
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button size="sm" onClick={() => { setOpen(true); }}>
                     {/* <Edit className="h-4 w-4" /> */}
                     <Eye className="h-4 w-4" />
-                    View
+                    Details
                 </Button>
             </DialogTrigger>
 
@@ -296,7 +313,7 @@ function TransactionDetailsCell({ row: transaction }: { row: any }) {
 
                         <span className="text-gray-500 dark:text-gray-400 font-medium">Amount:</span>
                         <span className="col-span-2 text-gray-900 dark:text-gray-100">
-                            ৳ {transaction?.amount?.toFixed(2) ?? "N/A"}
+                            $ {transaction?.amount?.toFixed(2) ?? "N/A"}
                         </span>
 
                         <span className="text-gray-500 dark:text-gray-400 font-medium">Type:</span>
