@@ -53,11 +53,8 @@ const AgentCardSection = ({ transactions }: { transactions: any }) => {
                         </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                        <div className="line-clamp-1 flex gap-2 font-medium">
+                        <div className="text-muted-foreground flex  gap-2">
                             Keep your balance up <TrendingUp className="size-4" />
-                        </div>
-                        <div className="text-muted-foreground">
-                            Your wallet is performing well
                         </div>
                     </CardFooter>
                 </Card>
@@ -75,9 +72,6 @@ const AgentCardSection = ({ transactions }: { transactions: any }) => {
                         </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                        <div className="line-clamp-1 flex gap-2 font-medium">
-                            Down 20% this period <TrendingDown className="size-4" />
-                        </div>
                         <div className="text-muted-foreground">
                             Cash-in to keep your balance up
                         </div>
@@ -97,10 +91,9 @@ const AgentCardSection = ({ transactions }: { transactions: any }) => {
                         </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                        <div className="line-clamp-1 flex gap-2 font-medium">
+                        <div className="text-muted-foreground flex gap-2">
                             Meet your daily target <TrendingUp className="size-4" />
                         </div>
-                        <div className="text-muted-foreground">Cash-out to keep your balance up</div>
                     </CardFooter>
                 </Card>
                 <Card className="@container/card">
@@ -117,10 +110,9 @@ const AgentCardSection = ({ transactions }: { transactions: any }) => {
                         </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                        <div className="line-clamp-1 flex gap-2 font-medium">
+                        <div className="text-muted-foreground flex gap-2">
                             Make transactions to earn more <TrendingUp className="size-4" />
                         </div>
-                        <div className="text-muted-foreground">Earn upto 50,000 per month</div>
                     </CardFooter>
                 </Card>
             </div>

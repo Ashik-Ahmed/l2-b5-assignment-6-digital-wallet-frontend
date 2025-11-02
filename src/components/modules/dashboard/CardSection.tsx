@@ -33,9 +33,6 @@ const CardSection = ({ transactions }: { transactions: any }) => {
                         </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                        <div className="line-clamp-1 flex gap-2 font-medium">
-                            Trending up this month <TrendingUp className="size-4" />
-                        </div>
                         <div className="text-muted-foreground">
                             Your wallet is performing well
                         </div>
@@ -55,9 +52,6 @@ const CardSection = ({ transactions }: { transactions: any }) => {
                         </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                        <div className="line-clamp-1 flex gap-2 font-medium">
-                            Down 20% this period <TrendingDown className="size-4" />
-                        </div>
                         <div className="text-muted-foreground">
                             Good job! Keep your spending in check
                         </div>
@@ -77,9 +71,6 @@ const CardSection = ({ transactions }: { transactions: any }) => {
                         </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                        <div className="line-clamp-1 flex gap-2 font-medium">
-                            Meets your daily limit <TrendingUp className="size-4" />
-                        </div>
                         <div className="text-muted-foreground">You can spend up to ${data?.data?.dailyLimit - data?.data?.dailySpent} today</div>
                     </CardFooter>
                 </Card>
@@ -97,9 +88,6 @@ const CardSection = ({ transactions }: { transactions: any }) => {
                         </CardAction> */}
                     </CardHeader>
                     <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                        <div className="line-clamp-1 flex gap-2 font-medium">
-                            Meets your monthly limit <TrendingUp className="size-4" />
-                        </div>
                         <div className="text-muted-foreground">You can spend up to ${data?.data?.monthlyLimit - data?.data?.dailySpent} this month</div>
                     </CardFooter>
                 </Card>
