@@ -13,7 +13,7 @@ import type {
     SortingState,
     ColumnDef,
 } from "@tanstack/react-table"
-import { ChevronDown, Edit, SearchIcon, } from "lucide-react"
+import { ChevronDown, Edit, Eye, SearchIcon, } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -264,158 +264,98 @@ const AdminManageUsers = () => {
 export default AdminManageUsers
 
 
-function UpdateUserModal({ user, updateProfileHandler }: { user: any, updateProfileHandler: SubmitHandler<FieldValues> }) {
-    const [editUserDialog, setEditUserDialog] = useState(false);
-    // console.log(user)
-    const form = useForm({
-        defaultValues: {
-            name: user?.name ?? "",
-            phone: user?.phone ?? "",
-            role: user?.role ?? "",
-            email: user?.email ?? "",
-            isActive: user?.isActive ?? "active",
-            isApproved: user?.isApproved ?? "approved",
-        },
-    });
-
-    const handleEditUser: SubmitHandler<FieldValues> = async (updatedData) => {
-        console.log("form data:", updatedData);
-    }
+function UpdateUserModal({ user }: { user: any }) {
+    const [viewUserDialog, setViewUserDialog] = useState(false);
 
     return (
-        <Dialog open={editUserDialog} onOpenChange={setEditUserDialog}>
+        <Dialog open={viewUserDialog} onOpenChange={setViewUserDialog}>
             <DialogTrigger asChild>
-                <Button size="sm" onClick={() => { form.reset({ name: user?.name ?? "", phone: user?.phone ?? "", role: user?.role ?? "", email: user?.email ?? "", isActive: user?.isActive ?? "active", isApproved: user?.isApproved ?? "approved" }); setEditUserDialog(true); }}>
-                    <Edit className="h-4 w-4" />
-                    Edit
+                <Button size="sm" onClick={() => { setViewUserDialog(true); }}>
+                    {/* <Edit className="h-4 w-4" /> */}
+                    <Eye className="h-4 w-4" />
+                    View
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[450px] rounded-lg border border-gray-200 shadow-lg bg-white dark:bg-neutral-900 dark:border-neutral-800">
                 <DialogHeader>
-                    <DialogTitle>Update user</DialogTitle>
+                    <DialogTitle className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                        User Details
+                    </DialogTitle>
                     <DialogDescription>
-                        Make changes to the user info here. Click save when you&apos;re done.
+                        View basic information about this user.
                     </DialogDescription>
                 </DialogHeader>
 
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(async (values) => {
-                        try {
-                            const ok = await handleEditUser(values);
-                            // reset only on success
-                            if (ok) {
-                                form.reset();
-                            }
-                        } catch (err) {
-                            console.error("Update failed:", err);
-                        } finally {
-                            // always close dialog whether update succeeded or failed
-                            setEditUserDialog(false);
-                        }
-                    })} className="grid gap-4">
-                        <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Name</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            placeholder={user?.name || "Your Name"}
-                                            value={field.value ?? user?.name}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        {/* <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            placeholder={user?.email || "Your Email"}
-                                            value={field.value ?? user?.email}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        /> */}
-                        <FormField
-                            control={form.control}
-                            name="phone"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Phone</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            placeholder={user?.phone || "Your Phone"}
-                                            value={field.value ?? user?.phone}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="isActive"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Active Status</FormLabel>
-                                    <FormControl>
-                                        <Select>
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Active Status" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="active">Active</SelectItem>
-                                                <SelectItem value="inactive">Inactive</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="isApproved"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Approve Status</FormLabel>
-                                    <FormControl>
-                                        <Select>
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Approve Status" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="approve">Approve</SelectItem>
-                                                <SelectItem value="notApprove">Not Approve</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                <div className="mt-4 space-y-4">
+                    <div className="grid grid-cols-3 gap-3 text-sm">
+                        <span className="font-medium text-gray-500 dark:text-gray-400">
+                            Name:
+                        </span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">
+                            {user?.name || "N/A"}
+                        </span>
 
-                        <DialogFooter className="mt-2">
-                            <DialogClose asChild>
-                                <Button variant="outline" onClick={() => setEditUserDialog(false)}>Cancel</Button>
-                            </DialogClose>
-                            <Button type="submit">Save changes</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
+                        <span className="font-medium text-gray-500 dark:text-gray-400">
+                            Email:
+                        </span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100 break-all">
+                            {user?.email || "N/A"}
+                        </span>
+
+                        <span className="font-medium text-gray-500 dark:text-gray-400">
+                            Phone:
+                        </span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">
+                            {user?.phone || "N/A"}
+                        </span>
+
+                        <span className="font-medium text-gray-500 dark:text-gray-400">
+                            Role:
+                        </span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100 capitalize">
+                            {user?.role || "N/A"}
+                        </span>
+
+                        <span className="font-medium text-gray-500 dark:text-gray-400">
+                            Status:
+                        </span>
+                        <span className="col-span-2">
+                            <span
+                                className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${user?.isActive
+                                    ? "bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-100"
+                                    : "bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-100"
+                                    }`}
+                            >
+                                {user?.isActive ? "Active" : "Blocked"}
+                            </span>
+                        </span>
+
+                        {/* <span className="font-medium text-gray-500 dark:text-gray-400">
+                            Approval:
+                        </span>
+                        <span className="col-span-2">
+                            <span
+                                className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${user?.isApproved === "approved"
+                                        ? "bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-100"
+                                        : "bg-yellow-100 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-100"
+                                    }`}
+                            >
+                                {user?.isApproved === "approved" ? "Approved" : "Pending"}
+                            </span>
+                        </span> */}
+                    </div>
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                    <Button
+                        variant="outline"
+                        onClick={() => setViewUserDialog(false)}
+                        className="text-sm"
+                    >
+                        Close
+                    </Button>
+                </div>
             </DialogContent>
         </Dialog>
     )
@@ -448,7 +388,7 @@ function UserIsActiveCell({ row }: { row: any }) {
                         </div> */}
                 <div className="flex items-center space-x-2">
                     <Switch id="isActive" checked={row.getValue("isActive")} onCheckedChange={(value) => handleUserActiveStatus(row.original._id, { isActive: value })} />
-                    <Label htmlFor="isActive" className={`capitalize w-fit px-1 py-1 rounded font-medium ${(row.getValue("isActive") === true ? "bg-blue-400 text-white" : "bg-gray-200")}`}>
+                    <Label htmlFor="isActive" className={`capitalize w-fit px-1 py-1 rounded font-medium ${(row.getValue("isActive") === true ? "bg-blue-400 text-white" : "bg-red-100 text-red-700")}`}>
                         {row.getValue("isActive") === true ? "Active" : "Blocked"}
                     </Label>
                 </div>
