@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAgentApprovalByAdminMutation, useGetAllUsersByAdminQuery, useUpdateUserByAdminMutation } from "@/redux/features/admin/admin.api"
+import { useAgentApprovalByAdminMutation, useGetAllAgentsByAdminQuery, useGetAllUsersByAdminQuery } from "@/redux/features/admin/admin.api"
 import {
     flexRender,
     getCoreRowModel,
@@ -81,6 +81,20 @@ export const columns: ColumnDef<User>[] = [
         cell: ({ row }) => <div className={`capitalize w-fit px-1 py-[0.5px] rounded text-white font-medium ${row.getValue("role") === "user" ? "bg-gray-500" : (row.getValue("role") === "admin" ? "bg-violet-500" : "bg-blue-400")}`}>{row.getValue("role")}</div>,
     },
     {
+        accessorKey: "isApproved",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost">
+                    Agent Approval
+                </Button>
+            )
+        },
+        cell: ({ row }) => <div>
+            <AgentIsApprovedCell row={row} />
+        </div>,
+    },
+    {
         accessorKey: "isActive",
         header: ({ column }) => {
             return (
@@ -90,10 +104,7 @@ export const columns: ColumnDef<User>[] = [
                 </Button>
             )
         },
-        // cell: ({ row }) => <div className={`w-fit px-1 py-[0.5px] rounded text-white font-medium ${row.getValue("isActive") ? "bg-green-500" : "bg-red-500"} capitalize`}>{row.getValue("isActive") ? "active" : "inactive"}</div>,
-        cell: ({ row }) => <div>
-            <UserIsActiveCell row={row} />
-        </div>,
+        cell: ({ row }) => <div className={`w-fit px-1 py-[0.5px] rounded text-white font-medium ${row.getValue("isActive") ? "bg-green-500" : "bg-red-500"} capitalize`}>{row.getValue("isActive") ? "active" : "inactive"}</div>,
     },
     {
         accessorKey: "action",
@@ -113,12 +124,11 @@ export const columns: ColumnDef<User>[] = [
     },
 ]
 
-const AdminManageUsers = () => {
+const AdminManageAgents = () => {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [roleFilter, setTypeFilter] = useState<string | null>(null)
-    const { data: userData } = useGetAllUsersByAdminQuery(undefined)
-
+    const { data: userData } = useGetAllAgentsByAdminQuery(undefined)
 
     const tableData: User[] = useMemo(() => {
         if (Array.isArray(userData)) return userData
@@ -261,7 +271,7 @@ const AdminManageUsers = () => {
     )
 }
 
-export default AdminManageUsers
+export default AdminManageAgents
 
 
 function UpdateUserModal({ user, updateProfileHandler }: { user: any, updateProfileHandler: SubmitHandler<FieldValues> }) {
@@ -421,38 +431,44 @@ function UpdateUserModal({ user, updateProfileHandler }: { user: any, updateProf
     )
 }
 
-function UserIsActiveCell({ row }: { row: any }) {
-    const [updateUserByAdmin] = useUpdateUserByAdminMutation();
+function AgentIsApprovedCell({ row }: { row: any }) {
+    const [agentApprovalByAdmin] = useAgentApprovalByAdminMutation();
 
-    const handleUserActiveStatus = async (id: any, data: any) => {
+    const handleAgentApproval = async (id: any, isApproved: boolean) => {
+
         try {
-            const result = await updateUserByAdmin({ id, data }).unwrap();
+            const result = await agentApprovalByAdmin({ id, isApproved }).unwrap();
 
             if (result.success) {
-                toast.success("User updated successfully");
+                toast.success("Agent status updated successfully");
             }
             else {
-                toast.error("Failed to update user");
+                toast.error("Failed to update agent status");
             }
         } catch (err: any) {
 
-            toast.error(err?.data?.message || "Failed to update user");
+            toast.error(err?.data?.message || "Failed to update agent status");
         }
     }
 
     return (
         <div>
-            <div>
-                {/* <div className={`capitalize w-fit px-1 py-[0.5px] rounded font-medium ${(row.getValue("isApproved") === true ? "bg-blue-400 text-white" : "")}`}>
+            {
+                row.getValue("role") === "agent" ?
+                    <div>
+                        {/* <div className={`capitalize w-fit px-1 py-[0.5px] rounded font-medium ${(row.getValue("isApproved") === true ? "bg-blue-400 text-white" : "")}`}>
                             {row.getValue("isApproved") === true ? "Approved" : "Not Approved"}
                         </div> */}
-                <div className="flex items-center space-x-2">
-                    <Switch id="isActive" checked={row.getValue("isActive")} onCheckedChange={(value) => handleUserActiveStatus(row.original._id, { isActive: value })} />
-                    <Label htmlFor="isActive" className={`capitalize w-fit px-1 py-1 rounded font-medium ${(row.getValue("isActive") === true ? "bg-blue-400 text-white" : "bg-gray-200")}`}>
-                        {row.getValue("isActive") === true ? "Active" : "Blocked"}
-                    </Label>
-                </div>
-            </div>
+                        <div className="flex items-center space-x-2">
+                            <Switch id="isApproved" checked={row.getValue("isApproved")} onCheckedChange={(value) => handleAgentApproval(row.original._id, value)} />
+                            <Label htmlFor="isApproved" className={`capitalize w-fit px-1 py-1 rounded font-medium ${(row.getValue("isApproved") === true ? "bg-blue-400 text-white" : "bg-gray-200")}`}>
+                                {row.getValue("isApproved") === true ? "Approved" : "Not Approved"}
+                            </Label>
+                        </div>
+                    </div>
+                    :
+                    <div>N/A</div>
+            }
         </div>
     )
 }
