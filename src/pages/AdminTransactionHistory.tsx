@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react'
+import React, { useState } from 'react'
 import {
     flexRender,
     getCoreRowModel,
@@ -13,7 +13,7 @@ import type {
     SortingState,
     ColumnDef,
 } from "@tanstack/react-table"
-import { ChevronDown, SearchIcon, } from "lucide-react"
+import { ChevronDown, Eye, SearchIcon, } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -34,6 +34,7 @@ import {
 import type { Transaction } from '@/components/modules/dashboard/DataTable'
 import { useGetAllTransactionsQuery } from '@/redux/features/transaction/transaction.api'
 import { useGetAllTransactionsByAdminQuery } from '@/redux/features/admin/admin.api'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
 export const columns: ColumnDef<Transaction>[] = [
     {
@@ -88,6 +89,18 @@ export const columns: ColumnDef<Transaction>[] = [
         },
         cell: ({ row }) => <div className="lowercase">{row.getValue("_id")}</div>,
     },
+    {
+        accessorKey: "action",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost">
+                    Action
+                </Button>
+            )
+        },
+        cell: ({ row }) => <div><TransactionDetailsCell row={row.original} /></div>,
+    },
 ]
 
 const AdminTransactionHistory = () => {
@@ -115,7 +128,7 @@ const AdminTransactionHistory = () => {
         return []
     }, [apiResponse])
 
-
+    console.log("admin trans:", apiResponse);
 
     const table = useReactTable({
         data: tableData,
@@ -247,6 +260,119 @@ const AdminTransactionHistory = () => {
                 </div>
             </div>
         </div >
+    )
+}
+
+function TransactionDetailsCell({ row: transaction }: { row: any }) {
+    const [open, setOpen] = useState(false);
+    console.log(transaction);
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button size="sm" onClick={() => { setOpen(true); }}>
+                    {/* <Edit className="h-4 w-4" /> */}
+                    <Eye className="h-4 w-4" />
+                    View
+                </Button>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-[450px] rounded-lg border border-gray-200 shadow-lg bg-white dark:bg-neutral-900 dark:border-neutral-800">
+                <DialogHeader>
+                    <DialogTitle className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                        Transaction details
+                    </DialogTitle>
+                    <DialogDescription>
+                        View details about this transaction
+                    </DialogDescription>
+                </DialogHeader>
+
+                {/* Transaction details */}
+                <div className="mt-4 space-y-3 text-sm">
+                    <div className="grid grid-cols-3 gap-3">
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">Transaction ID:</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100 break-all">
+                            {transaction?._id ?? "N/A"}
+                        </span>
+
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">Amount:</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">
+                            ৳ {transaction?.amount?.toFixed(2) ?? "N/A"}
+                        </span>
+
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">Type:</span>
+                        <span className="col-span-2">
+                            <span className="capitalize inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-100">
+                                {transaction?.type.split("_").join(" ") ?? "N/A"}
+                            </span>
+                        </span>
+
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">Status:</span>
+                        <span className="col-span-2">
+                            <span
+                                className={`capitalize inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${transaction?.status === "completed"
+                                    ? "bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-100"
+                                    : "bg-yellow-100 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-100"
+                                    }`}
+                            >
+                                {transaction?.status ?? "N/A"}
+                            </span>
+                        </span>
+
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">From:</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">
+                            {transaction?.fromWallet?.name ?? "N/A"}<br />
+                            <span className="text-gray-500 text-xs">{transaction?.fromWallet?.phone ?? ""}</span>
+                        </span>
+
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">To:</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">
+                            {transaction?.toWallet
+                                ? (
+                                    <>
+                                        {transaction.toWallet.name}<br />
+                                        <span className="text-gray-500 text-xs">{transaction.toWallet.phone}</span>
+                                    </>
+                                )
+                                : "N/A"}
+                        </span>
+
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">Initiated By:</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">
+                            {transaction?.initiatedBy?.name ?? "N/A"}<br />
+                            <span className="text-gray-500 text-xs">{transaction?.initiatedBy?.phone ?? ""}</span>
+                        </span>
+
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">Initiator Role:</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100 capitalize">
+                            {transaction?.initiatorRole ?? "N/A"}
+                        </span>
+
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">Date:</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">
+                            {transaction?.createdAt
+                                ? new Date(transaction.createdAt).toLocaleString()
+                                : "N/A"}
+                        </span>
+
+                        {/* <span className="text-gray-500 dark:text-gray-400 font-medium">Updated At:</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">
+                            {transaction?.updatedAt
+                                ? new Date(transaction.updatedAt).toLocaleString()
+                                : "N/A"}
+                        </span> */}
+                    </div>
+                </div>
+                <div className="mt-6 flex justify-end">
+                    <Button
+                        variant="outline"
+                        onClick={() => setOpen(false)}
+                        className="text-sm"
+                    >
+                        Close
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
     )
 }
 

@@ -1,27 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAgentApprovalByAdminMutation, useGetAllUsersByAdminQuery, useUpdateUserByAdminMutation } from "@/redux/features/admin/admin.api"
+import { useGetAllUsersByAdminQuery, useUpdateUserByAdminMutation } from "@/redux/features/admin/admin.api"
 import {
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table"
 import type {
-    ColumnFiltersState,
     SortingState,
     ColumnDef,
 } from "@tanstack/react-table"
-import { ChevronDown, Edit, Eye, SearchIcon, } from "lucide-react"
+import { Eye, SearchIcon, } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuItem,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
     Table,
@@ -32,10 +24,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { useMemo, useState } from "react"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
@@ -115,8 +104,6 @@ export const columns: ColumnDef<User>[] = [
 
 const AdminManageUsers = () => {
     const [sorting, setSorting] = useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-    const [roleFilter, setTypeFilter] = useState<string | null>(null)
     const { data: userData } = useGetAllUsersByAdminQuery(undefined)
 
 
@@ -132,14 +119,11 @@ const AdminManageUsers = () => {
         data: tableData,
         columns,
         onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
         state: {
             sorting,
-            columnFilters,
         },
     })
 
@@ -161,7 +145,7 @@ const AdminManageUsers = () => {
                         className="max-w-sm pl-10" // add left padding so text doesn't overlap the icon
                     />
                 </div>
-                <DropdownMenu>
+                {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
                             Filter role {roleFilter ? `: ${roleFilter}` : ""}
@@ -186,7 +170,7 @@ const AdminManageUsers = () => {
                             ))}
                         </div>
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
             </div>
             <div className="overflow-hidden rounded-md border">
                 <Table>
