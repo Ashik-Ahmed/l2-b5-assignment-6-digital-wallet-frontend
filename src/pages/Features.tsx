@@ -1,6 +1,7 @@
 import { ArrowRight, Wallet, Send, Banknote, ShieldCheck, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
+import type { JSX } from "react";
 
 interface Feature {
     id: string;
