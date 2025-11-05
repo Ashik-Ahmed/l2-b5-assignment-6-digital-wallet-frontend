@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import { useState, type ReactNode } from "react"
 import { Outlet, useNavigate } from "react-router"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../app-sidebar"
@@ -8,11 +8,13 @@ import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/a
 import { useAppDispatch } from "@/redux/hook"
 import userIcon from "@/assets/images/user.png"
 import { ModeToggle } from "./ModeToggler"
+import Joyride from "react-joyride"
 
 
 const AgentLayout = ({ children }: { children: ReactNode }) => {
 
     const { data, isLoading } = useUserInfoQuery(undefined);
+    const [runTour, setRunTour] = useState()
     const navigate = useNavigate();
     const [logout] = useLogoutMutation();
     const dispatch = useAppDispatch();
@@ -31,27 +33,71 @@ const AgentLayout = ({ children }: { children: ReactNode }) => {
         navigate("/login");
     }
 
+    const joyRideSteps = [
+        {
+            target: "#overview",
+            content: "Dashboard showing the summary of your account",
+            placement: "bottom",
+            disableBeacon: true
+        },
+        {
+            target: "#cashIn",
+            content: "Cash-in money to user's wallet",
+            placement: "bottom",
+            disableBeacon: true
+        },
+        {
+            target: "#cashOut",
+            content: "Cash-out money from user's wallet",
+            placement: "bottom",
+            disableBeacon: true
+        },
+        {
+            target: "#transactionHistory",
+            content: "See your transaction history",
+            placement: "bottom",
+            disableBeacon: true
+        },
+        {
+            target: "#userIcon",
+            content: "Personalize your profile",
+            placement: "bottom",
+            disableBeacon: true
+        },
+        {
+            target: "#themeToggler",
+            content: "Toggle between light and dark mode",
+            placement: "bottom",
+            disableBeacon: true
+        }
+    ]
+
     const sidebarList = {
         navMain: [
             {
                 title: "Dashboard",
                 url: "/agent/dashboard",
+                step: "dashboard",
                 items: [
                     {
                         title: "Overview",
                         url: "/agent/dashboard",
+                        step: "overview"
                     },
                     {
                         title: "Cash-in",
                         url: "/agent/cash-in",
+                        step: "cashIn"
                     },
                     {
                         title: "Cash-out",
                         url: "/agent/cash-out",
+                        step: "cashOut"
                     },
                     {
                         title: "Transaction History",
                         url: "/agent/transaction-history",
+                        step: "transactionHistory"
                     },
                 ]
             }
@@ -59,16 +105,17 @@ const AgentLayout = ({ children }: { children: ReactNode }) => {
     }
     return (
         <SidebarProvider>
+            <Joyride run={runTour} steps={joyRideSteps} continuous={true} showSkipButton={true} showProgress={true} />
             <AppSidebar sidebarList={sidebarList} />
             <SidebarInset>
                 <header className="flex justify-between h-16 shrink-0 items-center gap-2 border-b px-4">
                     <SidebarTrigger className="-ml-1" />
                     <div className="flex gap-2 items-center">
-                        <div>
+                        <div id="themeToggler">
                             <ModeToggle />
                         </div>
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild className="w-10 h-10 rounded-full">
+                            <DropdownMenuTrigger asChild id="userIcon" className="w-10 h-10 rounded-full">
 
                                 <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
 
