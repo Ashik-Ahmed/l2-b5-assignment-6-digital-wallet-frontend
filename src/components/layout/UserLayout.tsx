@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, type ReactNode } from "react"
+import { useState, type ReactNode, useEffect } from "react"
 import { Outlet, useNavigate } from "react-router"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../app-sidebar"
-import { LogOut, Settings } from "lucide-react"
+import { LogOut, RefreshCcw, Settings } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api"
 import { useAppDispatch } from "@/redux/hook"
 import userIcon from "@/assets/images/user.png"
 import { ModeToggle } from "./ModeToggler"
 import Joyride from 'react-joyride';
-
 
 export interface SidebarItem {
     title: string
@@ -20,12 +19,28 @@ export interface SidebarItem {
 }
 
 const UserLayout = ({ children }: { children: ReactNode }) => {
-
     const { data, isLoading } = useUserInfoQuery(undefined);
-    const [runTour, setRunTour] = useState()
+    const [runTour, setRunTour] = useState(false)
     const navigate = useNavigate();
     const [logout] = useLogoutMutation();
     const dispatch = useAppDispatch();
+
+    // Check if user has completed the tour
+    useEffect(() => {
+        const hasCompletedTour = localStorage.getItem('userTourCompleted');
+        if (!hasCompletedTour) {
+            setRunTour(true);
+        }
+    }, []);
+
+    // Handle tour completion
+    const handleJoyrideComplete = (data: any) => {
+        const { status } = data;
+        if (status === 'finished' || status === 'skipped') {
+            setRunTour(false);
+            localStorage.setItem('userTourCompleted', 'true');
+        }
+    };
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -40,6 +55,11 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
         dispatch(authApi.util.resetApiState());
         navigate("/login");
     }
+
+    const restartTour = () => {
+        localStorage.removeItem('userTourCompleted');
+        setRunTour(true);
+    };
 
     const joyRideSteps = [
         {
@@ -111,9 +131,17 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
             }
         ]
     }
+
     return (
         <SidebarProvider>
-            <Joyride run={runTour} steps={joyRideSteps} continuous={true} showSkipButton={true} showProgress={true} />
+            <Joyride
+                run={runTour}
+                steps={joyRideSteps}
+                continuous={true}
+                showSkipButton={true}
+                showProgress={true}
+                callback={handleJoyrideComplete}
+            />
             <AppSidebar sidebarList={sidebarList} joyRideSteps={joyRideSteps} />
             <SidebarInset>
                 <header className="flex justify-between h-16 shrink-0 items-center gap-2 border-b px-4">
@@ -124,16 +152,13 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
                         </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild id="userIcon" className="w-10 h-10 rounded-full">
-
                                 <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
-
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-48">
                                 <div className="flex items-center gap-4">
                                     <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
                                     <div>
                                         <p>{data?.data?.name || "User-Test"}</p>
-                                        {/* <p className="text-xs italic text-muted-foreground">{data?.data?.email || "Email-Test"}</p> */}
                                         <p className="capitalize text-muted-foreground">{data?.data?.role || "Role-Test"}</p>
                                     </div>
                                 </div>
@@ -141,6 +166,10 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
                                 <DropdownMenuItem onClick={() => navigate(`/${data?.data?.role}/profile`)}>
                                     <Settings className="mr-2 h-4 w-4" />
                                     Profile Settings
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => restartTour()}>
+                                    <RefreshCcw className="mr-2 h-4 w-4" />
+                                    Restart Guided Tour
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={handleLogout}>
                                     <LogOut className="mr-2 h-4 w-4" />
@@ -152,10 +181,9 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4">
                     <Outlet />
-                    {/* <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" /> */}
                 </div>
             </SidebarInset>
-        </SidebarProvider >
+        </SidebarProvider>
     )
 }
 

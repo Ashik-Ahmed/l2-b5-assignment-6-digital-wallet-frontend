@@ -1,8 +1,8 @@
-import { useState, type ReactNode } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import { Outlet, useNavigate } from "react-router"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../app-sidebar"
-import { LogOut, Settings } from "lucide-react"
+import { LogOut, RefreshCcw, Settings } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api"
 import { useAppDispatch } from "@/redux/hook"
@@ -14,10 +14,33 @@ import Joyride from "react-joyride"
 const AdminLayout = ({ children }: { children: ReactNode }) => {
 
     const { data, isLoading } = useUserInfoQuery(undefined);
-    const [runTour, setRunTour] = useState()
+    const [runTour, setRunTour] = useState(false)
     const navigate = useNavigate();
     const [logout] = useLogoutMutation();
     const dispatch = useAppDispatch();
+
+    // Check if user has completed the tour
+    useEffect(() => {
+        const hasCompletedTour = localStorage.getItem('userTourCompleted');
+        if (!hasCompletedTour) {
+            setRunTour(true);
+        }
+    }, []);
+
+    // Handle tour completion
+    const handleJoyrideComplete = (data: any) => {
+        const { status } = data;
+        if (status === 'finished' || status === 'skipped') {
+            setRunTour(false);
+            localStorage.setItem('userTourCompleted', 'true');
+        }
+    };
+
+
+    const restartTour = () => {
+        localStorage.removeItem('userTourCompleted');
+        setRunTour(true);
+    };
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -104,8 +127,16 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
     }
     return (
         <SidebarProvider>
-            <Joyride run={runTour} steps={joyRideSteps} continuous={true} showSkipButton={true} showProgress={true} />
+            <Joyride
+                run={runTour}
+                steps={joyRideSteps}
+                continuous={true}
+                showSkipButton={true}
+                showProgress={true}
+                callback={handleJoyrideComplete}
+            />
             <AppSidebar sidebarList={sidebarList} />
+
             <SidebarInset>
                 <header className="flex justify-between h-16 shrink-0 items-center gap-2 border-b px-4">
                     <SidebarTrigger className="-ml-1" />
@@ -132,6 +163,10 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
                                 <DropdownMenuItem onClick={() => navigate(`/${data?.data?.role}/profile`)}>
                                     <Settings className="mr-2 h-4 w-4" />
                                     Profile Settings
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => restartTour()}>
+                                    <RefreshCcw className="mr-2 h-4 w-4" />
+                                    Restart Guided Tour
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={handleLogout}>
                                     <LogOut className="mr-2 h-4 w-4" />
