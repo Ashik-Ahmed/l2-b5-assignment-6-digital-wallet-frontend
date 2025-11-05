@@ -21,6 +21,7 @@ import AdminDashboard from "@/pages/AdminDashboard";
 import AdminTransactionHistory from "@/pages/AdminTransactionHistory";
 import AdminManageUsers from "@/pages/AdminManageUsers";
 import AdminManageAgents from "@/pages/AdminManageAgents";
+import Register from "@/pages/Register";
 
 export const router = createBrowserRouter([
     {
@@ -130,5 +131,9 @@ export const router = createBrowserRouter([
     {
         Component: Login,
         path: "/login",
+    },
+    {
+        Component: Register,
+        path: "/register",
     }
 ])
