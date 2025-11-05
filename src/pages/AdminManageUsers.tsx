@@ -61,7 +61,7 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: "role",
-        header: ({ column }) => {
+        header: () => {
             return (
                 <Button variant="ghost">
                     Role
@@ -72,7 +72,7 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: "isActive",
-        header: ({ column }) => {
+        header: () => {
             return (
                 <Button
                     variant="ghost">
@@ -87,7 +87,7 @@ const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: "action",
-        header: ({ column }) => {
+        header: () => {
             return (
                 <Button
                     variant="ghost">

@@ -2,7 +2,7 @@
 
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useGetWalletBalanceQuery } from "@/redux/features/wallet/wallet.api"
-import { TrendingDown, TrendingUp } from "lucide-react"
+import { TrendingUp } from "lucide-react"
 
 const AgentCardSection = ({ transactions }: { transactions: any }) => {
 

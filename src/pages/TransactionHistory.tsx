@@ -89,7 +89,7 @@ const columns: ColumnDef<Transaction>[] = [
     },
     {
         accessorKey: "fromWallet",
-        header: ({ column }) => {
+        header: () => {
             return (
                 <Button
                     variant="ghost">
@@ -101,7 +101,7 @@ const columns: ColumnDef<Transaction>[] = [
     },
     {
         accessorKey: "toWallet",
-        header: ({ column }) => {
+        header: () => {
             return (
                 <Button
                     variant="ghost">
@@ -113,7 +113,7 @@ const columns: ColumnDef<Transaction>[] = [
     },
     {
         accessorKey: "status",
-        header: ({ column }) => {
+        header: () => {
             return (
                 <Button variant="ghost">
                     Status
@@ -124,7 +124,7 @@ const columns: ColumnDef<Transaction>[] = [
     },
     {
         accessorKey: "transactionId",
-        header: ({ column }) => {
+        header: () => {
             return (
                 <Button
                     variant="ghost">

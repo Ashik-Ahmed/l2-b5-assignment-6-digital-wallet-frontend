@@ -97,7 +97,7 @@ const columns: ColumnDef<Payment>[] = [
     },
     {
         accessorKey: "status",
-        header: ({ column }) => {
+        header: () => {
             return (
                 <Button variant="ghost">
                     Status
@@ -108,7 +108,7 @@ const columns: ColumnDef<Payment>[] = [
     },
     {
         accessorKey: "transactionId",
-        header: ({ column }) => {
+        header: () => {
             return (
                 <Button
                     variant="ghost">
