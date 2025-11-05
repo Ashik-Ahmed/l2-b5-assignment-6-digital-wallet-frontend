@@ -58,7 +58,7 @@ const Profile: React.FC = () => {
             }
 
         } catch (err) {
-            console.log(err);
+            // console.log(err);
             toast.error("Failed to update profile");
             return false;
         }
@@ -239,7 +239,6 @@ function UpdatePasswordModal({ userId }: { userId: string }) {
         }
 
         try {
-            console.log("change password data:", data);
             const payload = {
                 userId,
                 currentPassword: data.currentPassword,

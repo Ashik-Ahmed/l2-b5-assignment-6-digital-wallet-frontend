@@ -161,7 +161,6 @@ const TransactionHistory = () => {
         return []
     }, [apiResponse])
 
-    console.log("user trx:", apiResponse);
 
     const table = useReactTable({
         data: tableData,

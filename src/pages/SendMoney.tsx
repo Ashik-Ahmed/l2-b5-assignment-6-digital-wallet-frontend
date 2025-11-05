@@ -56,7 +56,6 @@ const SendMoney = () => {
         try {
             const sendMoneyResult = await sendMoney({ phone: data.phone, amount: parseFloat(data.amount) }).unwrap();
 
-            console.log("Send money result:", sendMoneyResult);
             if (sendMoneyResult.success) {
                 toast.success("Send money successful!");
             }
@@ -64,7 +63,6 @@ const SendMoney = () => {
                 toast.error("Send money failed!");
             }
         } catch (error: any) {
-            console.log(error);
             toast.error(error?.data?.message || "Send money failed! Try again.");
         }
 
