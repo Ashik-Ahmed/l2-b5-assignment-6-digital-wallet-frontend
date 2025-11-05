@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { ArrowRight } from 'lucide-react';
-import { useCashOutMutation, useGetWalletBalanceQuery, useSendMoneyMutation } from '@/redux/features/wallet/wallet.api';
+import { useGetWalletBalanceQuery, useSendMoneyMutation } from '@/redux/features/wallet/wallet.api';
 import { toast } from 'sonner';
 import { useGetAllTransactionsQuery } from '@/redux/features/transaction/transaction.api';
 import { timeAgo } from '@/utils/timeDifference';
+import type { Transaction } from '@/components/modules/dashboard/DataTable';
 
 
 const SendMoney = () => {
@@ -29,21 +31,21 @@ const SendMoney = () => {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
     const todaysSendmoneyTotal =
-        transactionData?.data?.reduce((total = 0, tx) => {
+        transactionData?.data?.reduce((total = 0, tx: Transaction) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= startOfToday) total += tx.amount
             return total
         }, 0) ?? 0
 
     const weeklySendmoneyTotal =
-        transactionData?.data?.reduce((total = 0, tx) => {
+        transactionData?.data?.reduce((total = 0, tx: Transaction) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= sevenDaysAgo) total += tx.amount
             return total
         }, 0) ?? 0
 
     const monthlySendmoneyTotal =
-        transactionData?.data?.reduce((total = 0, tx) => {
+        transactionData?.data?.reduce((total = 0, tx: Transaction) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= thirtyDaysAgo) total += tx.amount
             return total
@@ -61,7 +63,7 @@ const SendMoney = () => {
             else {
                 toast.error("Send money failed!");
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             toast.error(error?.data?.message || "Send money failed! Try again.");
         }
@@ -201,8 +203,8 @@ const SendMoney = () => {
                             <h4 className="font-medium mb-3">Recent Send Money</h4>
                             <ul className="space-y-3">
                                 {
-                                    transactionData?.data?.length ? transactionData?.data?.slice(0, 5)?.map((tx) => (
-                                        <li key={tx.id} className="flex items-center justify-between text-sm">
+                                    transactionData?.data?.length ? transactionData?.data?.slice(0, 5)?.map((tx: Transaction) => (
+                                        <li key={tx._id} className="flex items-center justify-between text-sm">
                                             <div>
                                                 <div className="font-medium">Wallet : +88 {tx?.toWallet?.phone} <span className='text-muted-foreground italic text-xs'>({tx?.toWallet?.name})</span></div>
                                                 <div className="text-muted-foreground text-xs">{timeAgo(tx.createdAt)}</div>

@@ -1,4 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react"
 import { Outlet, useNavigate } from "react-router"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../app-sidebar"
@@ -8,10 +9,11 @@ import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/a
 import { useAppDispatch } from "@/redux/hook"
 import userIcon from "@/assets/images/user.png"
 import { ModeToggle } from "./ModeToggler"
-import Joyride from "react-joyride"
+import Joyride, { type Placement } from "react-joyride"
 
 
-const AdminLayout = ({ children }: { children: ReactNode }) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const AdminLayout = () => {
 
     const { data, isLoading } = useUserInfoQuery(undefined);
     const [runTour, setRunTour] = useState(false)
@@ -60,37 +62,37 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
         {
             target: "#overview",
             content: "Dashboard showing the summary",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#manageUsers",
             content: "Show the user details and active/block any user",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#manageAgents",
             content: "Manage agent details and approve/suspend any agent",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#transactionHistory",
             content: "See the transaction history for all users",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#userIcon",
             content: "Personalize your profile",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#themeToggler",
             content: "Toggle between light and dark mode",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         }
     ]
@@ -100,6 +102,7 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
             {
                 title: "Dashboard",
                 url: "/admin/dashboard",
+                step: "dashboard",
                 items: [
                     {
                         title: "Overview",
@@ -135,7 +138,7 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
                 showProgress={true}
                 callback={handleJoyrideComplete}
             />
-            <AppSidebar sidebarList={sidebarList} />
+            <AppSidebar sidebarList={sidebarList} joyRideSteps={joyRideSteps} />
 
             <SidebarInset>
                 <header className="flex justify-between h-16 shrink-0 items-center gap-2 border-b px-4">

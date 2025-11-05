@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // ...existing code...
 import React from "react"
@@ -74,7 +75,7 @@ const Profile: React.FC = () => {
                                 <div className="flex items-center gap-6">
                                     <Avatar className="w-28 h-28">
                                         <AvatarImage src={user.avatar} alt={user.name} />
-                                        <AvatarFallback>{user.name.split(" ").map(n => n[0]).slice(0, 2).join("")}</AvatarFallback>
+                                        <AvatarFallback>{user.name.split(" ").map((n: any[]) => n[0]).slice(0, 2).join("")}</AvatarFallback>
                                     </Avatar>
 
                                     <div>
@@ -254,7 +255,7 @@ function UpdatePasswordModal({ userId }: { userId: string }) {
                 toast.error("Failed to change password");
                 return false;
             }
-        } catch (error) {
+        } catch (error: any) {
             // console.error("Failed to change password:", error);
             toast.error(error?.data?.message || "Failed to change password");
             return false;

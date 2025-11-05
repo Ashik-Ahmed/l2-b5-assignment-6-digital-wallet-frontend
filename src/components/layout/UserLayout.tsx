@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, type ReactNode, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Outlet, useNavigate } from "react-router"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../app-sidebar"
@@ -9,7 +10,7 @@ import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/a
 import { useAppDispatch } from "@/redux/hook"
 import userIcon from "@/assets/images/user.png"
 import { ModeToggle } from "./ModeToggler"
-import Joyride from 'react-joyride';
+import Joyride, { type Placement } from 'react-joyride';
 
 export interface SidebarItem {
     title: string
@@ -18,7 +19,7 @@ export interface SidebarItem {
     items?: SidebarItem[]
 }
 
-const UserLayout = ({ children }: { children: ReactNode }) => {
+const UserLayout = () => {
     const { data, isLoading } = useUserInfoQuery(undefined);
     const [runTour, setRunTour] = useState(false)
     const navigate = useNavigate();
@@ -65,37 +66,37 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
         {
             target: "#overview",
             content: "Dashboard showing the summary of your account",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#withdraw",
             content: "WIthdraw cash via approved agents",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#sendMoney",
             content: "Transfer money to other users wallet",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#transactionHistory",
             content: "See your transaction history",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#userIcon",
             content: "Personalize your profile",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#themeToggler",
             content: "Toggle between light and dark mode",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         }
     ]

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -30,7 +31,7 @@ export function LoginForm({
                 toast.success("Login successful");
                 navigate(`/${res.data.user.role}/dashboard`);
             }
-        } catch (err) {
+        } catch (err: any) {
             // console.log(err);
             toast.error(err?.data?.message || "Login failed! Try again.");
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react"
 import {
@@ -31,7 +32,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { useGetAllTransactionsQuery } from "@/redux/features/transaction/transaction.api"
 
 
 export type Payment = {
@@ -42,7 +42,7 @@ export type Payment = {
     type: "add_money" | "withdraw" | "send_money" | "cash_in" | "cash_out" | "commission" | "cashout_fee" | "send_money_fee"
 }
 
-export const columns: ColumnDef<Payment>[] = [
+const columns: ColumnDef<Payment>[] = [
 
     {
         accessorKey: "createdAt",
@@ -57,16 +57,18 @@ export const columns: ColumnDef<Payment>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => (
-            <div>{row.getValue("createdAt")?.split("T")[0]}</div>
-        ),
+        cell: ({ row }) => {
+            const dateValue = row.getValue("createdAt") as string
+            return <div>{dateValue?.split("T")[0]}</div>
+        },
     },
     {
         accessorKey: "type",
         header: "Type",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("type").split("_").join(" ")}</div>
-        ),
+        cell: ({ row }) => {
+            const typeValue = row.getValue("type") as string
+            return <div className="capitalize">{typeValue.split("_").join(" ")}</div>
+        },
     },
     {
         accessorKey: "amount",

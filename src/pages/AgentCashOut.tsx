@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -8,6 +9,7 @@ import { toast } from 'sonner';
 import { useGetAllTransactionsQuery } from '@/redux/features/transaction/transaction.api';
 import { timeAgo } from '@/utils/timeDifference';
 import { useCashOutByAgentMutation } from '@/redux/features/agent/agent.api';
+import type { Transaction } from '@/components/modules/dashboard/DataTable';
 
 
 const AgentCashOut = () => {
@@ -30,21 +32,21 @@ const AgentCashOut = () => {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
     const todaysCashoutTotal =
-        transactionData?.data?.reduce((total = 0, tx) => {
+        transactionData?.data?.reduce((total = 0, tx: Transaction) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= startOfToday) total += tx.amount
             return total
         }, 0) ?? 0
 
     const weeklyCashoutTotal =
-        transactionData?.data?.reduce((total = 0, tx) => {
+        transactionData?.data?.reduce((total = 0, tx: Transaction) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= sevenDaysAgo) total += tx.amount
             return total
         }, 0) ?? 0
 
     const monthlyCashoutTotal =
-        transactionData?.data?.reduce((total = 0, tx) => {
+        transactionData?.data?.reduce((total = 0, tx: Transaction) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= thirtyDaysAgo) total += tx.amount
             return total
@@ -61,7 +63,7 @@ const AgentCashOut = () => {
             else {
                 toast.error("Cash-out failed!");
             }
-        } catch (error) {
+        } catch (error: any) {
 
             toast.error(error?.data?.message || "Cash-out failed! Try again.");
         }
@@ -201,7 +203,7 @@ const AgentCashOut = () => {
                             <h4 className="font-medium mb-3">Recent Cash-outs</h4>
                             <ul className="space-y-3">
                                 {
-                                    transactionData?.data?.length ? transactionData?.data?.slice(0, 5)?.map((tx) => (
+                                    transactionData?.data?.length ? transactionData?.data?.slice(0, 5)?.map((tx: Transaction) => (
                                         <li key={tx?._id} className="flex items-center justify-between text-sm">
                                             <div>
                                                 <div className="font-medium">Wallet : +88 {tx?.fromWallet?.phone} <span className='text-muted-foreground italic text-xs'>({tx?.fromWallet?.name})</span></div>

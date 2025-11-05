@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react'
 import {
@@ -35,7 +36,7 @@ import type { Transaction } from '@/components/modules/dashboard/DataTable'
 import { useGetAllTransactionsByAdminQuery } from '@/redux/features/admin/admin.api'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
-export const columns: ColumnDef<Transaction>[] = [
+const columns: ColumnDef<Transaction>[] = [
     {
         accessorKey: "createdAt",
         header: ({ column }) => {
@@ -49,16 +50,18 @@ export const columns: ColumnDef<Transaction>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => (
-            <div>{row.getValue("createdAt")?.split("T")[0]}</div>
-        ),
+        cell: ({ row }) => {
+            const dateValue = row.getValue("createdAt") as string
+            return <div>{dateValue?.split("T")[0]}</div>
+        },
     },
     {
         accessorKey: "type",
         header: "Type",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("type").split("_").join(" ")}</div>
-        ),
+        cell: ({ row }) => {
+            const typeValue = row.getValue("type") as string
+            return <div> {typeValue?.split("_").join(" ")}</div>
+        },
     },
     {
         accessorKey: "amount",

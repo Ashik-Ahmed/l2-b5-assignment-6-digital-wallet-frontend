@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAgentApprovalByAdminMutation, useGetAllAgentsByAdminQuery } from "@/redux/features/admin/admin.api"
 import {
@@ -35,7 +36,7 @@ export type User = {
     role: string
 }
 
-export const columns: ColumnDef<User>[] = [
+const columns: ColumnDef<User>[] = [
     {
         accessorKey: "name",
         header: "Name",

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import {
@@ -34,7 +35,7 @@ import {
 import type { Transaction } from '@/components/modules/dashboard/DataTable'
 import { useGetAllTransactionsQuery } from '@/redux/features/transaction/transaction.api'
 
-export const columns: ColumnDef<Transaction>[] = [
+const columns: ColumnDef<Transaction>[] = [
     {
         accessorKey: "createdAt",
         header: ({ column }) => {
@@ -48,16 +49,18 @@ export const columns: ColumnDef<Transaction>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => (
-            <div>{row.getValue("createdAt")?.split("T")[0]}</div>
-        ),
+        cell: ({ row }) => {
+            const dateValue = row.getValue("createdAt") as string
+            return <div>{dateValue?.split("T")[0]}</div>
+        },
     },
     {
         accessorKey: "type",
         header: "Type",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("type").split("_").join(" ")}</div>
-        ),
+        cell: ({ row }) => {
+            const typeValue = row.getValue("type") as string
+            return <div className="capitalize">{typeValue.split("_").join(" ")}</div>
+        },
     },
     {
         accessorKey: "amount",
@@ -94,7 +97,7 @@ export const columns: ColumnDef<Transaction>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div>{row.getValue("fromWallet")?.phone || 'N/A'}</div>,
+        cell: ({ row }: any) => <div>{row.getValue("fromWallet")?.phone || 'N/A'}</div>,
     },
     {
         accessorKey: "toWallet",
@@ -106,7 +109,7 @@ export const columns: ColumnDef<Transaction>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div>{row.getValue("toWallet")?.phone || 'N/A'}</div>,
+        cell: ({ row }: any) => <div>{row.getValue("toWallet")?.phone || 'N/A'}</div>,
     },
     {
         accessorKey: "status",

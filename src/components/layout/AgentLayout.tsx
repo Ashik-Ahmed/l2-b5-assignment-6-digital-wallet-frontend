@@ -1,4 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react"
 import { Outlet, useNavigate } from "react-router"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../app-sidebar"
@@ -8,10 +9,11 @@ import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/a
 import { useAppDispatch } from "@/redux/hook"
 import userIcon from "@/assets/images/user.png"
 import { ModeToggle } from "./ModeToggler"
-import Joyride from "react-joyride"
+import Joyride, { type Placement } from "react-joyride"
 
 
-const AgentLayout = ({ children }: { children: ReactNode }) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const AgentLayout = () => {
 
     const { data, isLoading } = useUserInfoQuery(undefined);
     const [runTour, setRunTour] = useState(false)
@@ -60,37 +62,37 @@ const AgentLayout = ({ children }: { children: ReactNode }) => {
         {
             target: "#overview",
             content: "Dashboard showing the summary of your account",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#cashIn",
             content: "Cash-in money to user's wallet",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#cashOut",
             content: "Cash-out money from user's wallet",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#transactionHistory",
             content: "See your transaction history",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#userIcon",
             content: "Personalize your profile",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         },
         {
             target: "#themeToggler",
             content: "Toggle between light and dark mode",
-            placement: "bottom",
+            placement: "bottom" as Placement,
             disableBeacon: true
         }
     ]
@@ -136,7 +138,7 @@ const AgentLayout = ({ children }: { children: ReactNode }) => {
                 showProgress={true}
                 callback={handleJoyrideComplete} />
 
-            <AppSidebar sidebarList={sidebarList} />
+            <AppSidebar sidebarList={sidebarList} joyRideSteps={joyRideSteps} />
 
             <SidebarInset>
                 <header className="flex justify-between h-16 shrink-0 items-center gap-2 border-b px-4">

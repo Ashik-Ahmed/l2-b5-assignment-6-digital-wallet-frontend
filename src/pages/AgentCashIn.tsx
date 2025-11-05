@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -30,21 +31,21 @@ const AgentCashIn = () => {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
     const todaysCashoutTotal =
-        transactionData?.data?.reduce((total = 0, tx) => {
+        transactionData?.data?.reduce((total = 0, tx: any) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= startOfToday) total += tx.amount
             return total
         }, 0) ?? 0
 
     const weeklyCashoutTotal =
-        transactionData?.data?.reduce((total = 0, tx) => {
+        transactionData?.data?.reduce((total = 0, tx: any) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= sevenDaysAgo) total += tx.amount
             return total
         }, 0) ?? 0
 
     const monthlyCashoutTotal =
-        transactionData?.data?.reduce((total = 0, tx) => {
+        transactionData?.data?.reduce((total = 0, tx: any) => {
             const txDate = new Date(tx.createdAt)
             if (txDate >= thirtyDaysAgo) total += tx.amount
             return total
@@ -61,7 +62,7 @@ const AgentCashIn = () => {
             else {
                 toast.error("Cash-in failed!");
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error?.data?.message || "Cash-in failed! Try again.");
         }
 
@@ -200,7 +201,7 @@ const AgentCashIn = () => {
                             <h4 className="font-medium mb-3">Recent Cash-in</h4>
                             <ul className="space-y-3">
                                 {
-                                    transactionData?.data?.length ? transactionData?.data?.slice(0, 5)?.map((tx) => (
+                                    transactionData?.data?.length ? transactionData?.data?.slice(0, 5)?.map((tx: any) => (
                                         <li key={tx._id} className="flex items-center justify-between text-sm">
                                             <div>
                                                 <div className="font-medium">Wallet : +88 {tx?.toWallet?.phone} <span className='text-muted-foreground italic text-xs'>({tx?.toWallet?.name})</span></div>
