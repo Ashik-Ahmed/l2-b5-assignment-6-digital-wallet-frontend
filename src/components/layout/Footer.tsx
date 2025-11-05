@@ -1,4 +1,5 @@
 import Logo from "@/assets/icons/Logo";
+import { Link } from "react-router";
 
 export default function Footer() {
     return (
@@ -11,8 +12,8 @@ export default function Footer() {
                         </div>
 
                         <p className="mt-4 max-w-xs text-muted-foreground/80">
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Esse non
-                            cupiditate quae nam molestias.
+                            We aim to build a cashless ecosystem where financial
+                            transactions are secure, instant, and inclusive.
                         </p>
 
                         <ul className="mt-8 flex gap-6">
@@ -140,53 +141,53 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="#"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         1on1 Coaching{" "}
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/about"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         Company Review{" "}
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/about"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         Accounts Review{" "}
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/about"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         HR Consulting{" "}
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/about"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         SEO Optimisation{" "}
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </div>
@@ -196,33 +197,33 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/about"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         About{" "}
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/about#team"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         Meet the Team{" "}
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/about"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         Accounts Review{" "}
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </div>
@@ -232,33 +233,33 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/contact"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         Contact{" "}
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/faq"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         FAQs{" "}
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/contact"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         Live Chat{" "}
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </div>
@@ -268,23 +269,23 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/about"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         Accessibility{" "}
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/about"
                                         className="text-gray-700 transition hover:opacity-75"
                                     >
                                         {" "}
                                         Returns Policy{" "}
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>
@@ -296,22 +297,13 @@ export default function Footer() {
                                         Refund Policy{" "}
                                     </a>
                                 </li>
-
-                                <li>
-                                    <a
-                                        href="#"
-                                        className="text-gray-700 transition hover:opacity-75"
-                                    >
-                                        Hiring-3 Statistics
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <p className="text-xs text-gray-500">
-                    &copy; 2022. Company Name. All rights reserved.
+                    &copy; {new Date().getFullYear()}. DigiCash. All rights reserved.
                 </p>
             </div>
         </footer>

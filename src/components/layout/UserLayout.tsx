@@ -1,4 +1,5 @@
-import type { ReactNode } from "react"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useState, type ReactNode } from "react"
 import { Outlet, useNavigate } from "react-router"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../app-sidebar"
@@ -8,11 +9,20 @@ import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/a
 import { useAppDispatch } from "@/redux/hook"
 import userIcon from "@/assets/images/user.png"
 import { ModeToggle } from "./ModeToggler"
+import Joyride from 'react-joyride';
 
+
+export interface SidebarItem {
+    title: string
+    url: string
+    step: string
+    items?: SidebarItem[]
+}
 
 const UserLayout = ({ children }: { children: ReactNode }) => {
 
-    const { data, isLoading, isFetching } = useUserInfoQuery(undefined);
+    const { data, isLoading } = useUserInfoQuery(undefined);
+    const [runTour, setRunTour] = useState()
     const navigate = useNavigate();
     const [logout] = useLogoutMutation();
     const dispatch = useAppDispatch();
@@ -31,27 +41,71 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
         navigate("/login");
     }
 
-    const sidebarList = {
+    const joyRideSteps = [
+        {
+            target: "#overview",
+            content: "Dashboard showing the summary of your account",
+            placement: "bottom",
+            disableBeacon: true
+        },
+        {
+            target: "#withdraw",
+            content: "WIthdraw cash via approved agents",
+            placement: "bottom",
+            disableBeacon: true
+        },
+        {
+            target: "#sendMoney",
+            content: "Transfer money to other users wallet",
+            placement: "bottom",
+            disableBeacon: true
+        },
+        {
+            target: "#transactionHistory",
+            content: "See your transaction history",
+            placement: "bottom",
+            disableBeacon: true
+        },
+        {
+            target: "#userIcon",
+            content: "Personalize your profile",
+            placement: "bottom",
+            disableBeacon: true
+        },
+        {
+            target: "#themeToggler",
+            content: "Toggle between light and dark mode",
+            placement: "bottom",
+            disableBeacon: true
+        }
+    ]
+
+    const sidebarList: { navMain: SidebarItem[] } = {
         navMain: [
             {
                 title: "Dashboard",
                 url: "/user/dashboard",
+                step: "dashboard",
                 items: [
                     {
                         title: "Overview",
                         url: "/user/dashboard",
+                        step: "overview",
                     },
                     {
                         title: "Withdraw",
                         url: "/user/withdraw",
+                        step: "withdraw",
                     },
                     {
                         title: "Send Money",
                         url: "/user/send-money",
+                        step: "sendMoney",
                     },
                     {
                         title: "Transaction History",
                         url: "/user/transaction-history",
+                        step: "transactionHistory",
                     },
                 ]
             }
@@ -59,16 +113,17 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
     }
     return (
         <SidebarProvider>
-            <AppSidebar sidebarList={sidebarList} />
+            <Joyride run={runTour} steps={joyRideSteps} continuous={true} showSkipButton={true} showProgress={true} />
+            <AppSidebar sidebarList={sidebarList} joyRideSteps={joyRideSteps} />
             <SidebarInset>
                 <header className="flex justify-between h-16 shrink-0 items-center gap-2 border-b px-4">
                     <SidebarTrigger className="-ml-1" />
                     <div className="flex gap-2 items-center">
-                        <div>
+                        <div id="themeToggler">
                             <ModeToggle />
                         </div>
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild className="w-10 h-10 rounded-full">
+                            <DropdownMenuTrigger asChild id="userIcon" className="w-10 h-10 rounded-full">
 
                                 <img src={data?.data?.profileImage || userIcon} className="h-10 w-10 rounded-full" alt="User" />
 
